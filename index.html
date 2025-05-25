@@ -1143,7 +1143,7 @@
 
             // Rejoin actions (hidden in read-only mode)
             if (!isReadOnly) {
-                tableHTML += `<tr><td class="p-1">  </td>${players.map(player => {
+                tableHTML += `<tr><td class="p-1"> Action </td>${players.map(player => {
                     const canRejoin = player.eliminated && player.lastEliminatedRound !== null && round === player.lastEliminatedRound + 1 && (players.filter(p => !p.eliminated).length > 0 && Math.max(...players.filter(p => !p.eliminated).map(p => p.totalScore)) <= REJOIN_THRESHOLD);
                     return `<td class="p-1 text-center">${canRejoin ? `<button onclick="rejoinPlayer('${player.name}')" class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600">Rejoin</button>` : ''}</td>`;
                 }).join('')}</tr>`;
