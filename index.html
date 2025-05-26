@@ -830,33 +830,47 @@
                 return;
             }
 
-            const names = input.split(',').map(name => formatName(name.trim())).filter(name => name);
-            const newPlayers = names.filter(name => !players.some(p => p.name === name));
-            if (players.length + newPlayers.length > MAX_PLAYERS) {
-                els.playerError.textContent = `Maximum ${MAX_PLAYERS} players allowed.`;
-                els.playerError.classList.remove('hidden');
-                return;
-            }
+            const existingNames = players.map(p => p.name.toLowerCase());
+            const inputNames = input.split(',').map(name => name.trim()).filter(name => name);
+            const formattedNames = inputNames.map(name => formatName(name));
 
-            newPlayers.forEach(name => {
-                players.push({ 
-                    name, 
-                    initialBetAmount: betInput,
-                    betAmount: betInput,
-                    totalScore: 0, 
-                    roundsWon: 0, 
-                    eliminated: false, 
-                    rejoinCount: 0, 
-                    lastEliminatedRound: null, 
-                    rejoinRounds: [] 
-                });
+            const uniqueNames = [];
+            const duplicateNames = [];
+
+        formattedNames.forEach(name => {
+                    if (existingNames.includes(name.toLowerCase()) || uniqueNames.includes(name.toLowerCase())) {
+                        duplicateNames.push(name);
+                    } else {
+                        uniqueNames.push(name);
+                    }
+        });
+
+        if (duplicateNames.length > 0) {
+            els.playerError.textContent = `Duplicate name(s): ${duplicateNames.join(', ')}. Please use unique names.`;
+            els.playerError.classList.remove('hidden');
+            return;
+        }
+
+        uniqueNames.forEach(name => {
+            players.push({
+                name,
+                initialBetAmount: betInput,
+                betAmount: betInput,
+                totalScore: 0,
+                roundsWon: 0,
+                eliminated: false,
+                rejoinCount: 0,
+                lastEliminatedRound: null,
+                rejoinRounds: []
             });
+        });
+                
+        els.playerName.value = '';
+        els.betAmount.value = '10';
+        els.playerError.classList.add('hidden');
+        updatePlayerList();
+        saveGameState();
 
-            els.playerName.value = '';
-            els.betAmount.value = '10';
-            els.playerError.classList.add('hidden');
-            updatePlayerList();
-            saveGameState();
         }
 
         function updatePlayerList() {
