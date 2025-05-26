@@ -684,43 +684,51 @@
         }
 
         function saveGameHistory() {
-            if (isReadOnly) return;
-            const activePlayers = players.filter(p => !p.eliminated);
-            const winnings = calculateWinnings();
-            let result = winnings
-                ? winnings.filter(w => w.winnings !== 0).map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join(', ')
-                : 'Winnings can only be calculated if at least 40% of players are eliminated or no drops remain.';
+    if (isReadOnly) return;
 
-            if (els.winnerText.textContent.includes('manually')) {
-                result = `Manual End: ${result}`;
-            } else if (!activePlayers.some(p => Math.floor((TARGET_SCORE - p.totalScore) / 24) > 0)) {
-                result = `No Drops: ${result}`;
-            }
+    const existingHistory = JSON.parse(sessionStorage.getItem('rummyGameHistory') || '[]');
+    
+    // Remove existing entry with same startDateTime (if any)
+    const filteredHistory = existingHistory.filter(g => g.startDateTime !== startDateTime);
 
-            const gameData = {
-                gameName: gameName || 'Untitled',
-                startDateTime: startDateTime || new Date().toISOString(),
-                targetScore: TARGET_SCORE || 100,
-                totalBetAmount: calculateTotalBetAmount(),
-                players: players.map(p => ({
-                    name: p.name,
-                    initialBetAmount: p.initialBetAmount,
-                    betAmount: p.betAmount,
-                    totalScore: p.totalScore,
-                    roundsWon: p.roundsWon,
-                    eliminated: p.eliminated,
-                    rejoinCount: p.rejoinCount,
-                    lastEliminatedRound: p.lastEliminatedRound,
-                    rejoinRounds: p.rejoinRounds
-                })),
-                roundScores: roundScores.map(round => ({ ...round })),
-                result
-            };
+    const activePlayers = players.filter(p => !p.eliminated);
+    const winnings = calculateWinnings();
+    let result = winnings
+        ? winnings.filter(w => w.winnings !== 0).map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join(', ')
+        : 'Winnings can only be calculated if at least 40% of players are eliminated or no drops remain.';
 
-            gameHistory.push(gameData);
-            sessionStorage.setItem('rummyGameHistory', JSON.stringify(gameHistory));
-            updateGameHistory();
-        }
+    if (els.winnerText.textContent.includes('manually')) {
+        result = `Manual End: ${result}`;
+    } else if (!activePlayers.some(p => Math.floor((TARGET_SCORE - p.totalScore) / 24) > 0)) {
+        result = `No Drops: ${result}`;
+    }
+
+    const gameData = {
+        gameName: gameName || 'Untitled',
+        startDateTime: startDateTime || new Date().toISOString(),
+        targetScore: TARGET_SCORE || 100,
+        totalBetAmount: calculateTotalBetAmount(),
+        players: players.map(p => ({
+            name: p.name,
+            initialBetAmount: p.initialBetAmount,
+            betAmount: p.betAmount,
+            totalScore: p.totalScore,
+            roundsWon: p.roundsWon,
+            eliminated: p.eliminated,
+            rejoinCount: p.rejoinCount,
+            lastEliminatedRound: p.lastEliminatedRound,
+            rejoinRounds: p.rejoinRounds
+        })),
+        roundScores: roundScores.map(round => ({ ...round })),
+        result
+    };
+
+    // Push the new, unique entry
+    filteredHistory.push(gameData);
+    sessionStorage.setItem('rummyGameHistory', JSON.stringify(filteredHistory));
+    updateGameHistory();
+}
+
 
         function updateGameHistory() {
             gameHistory = JSON.parse(sessionStorage.getItem('rummyGameHistory') || '[]');
