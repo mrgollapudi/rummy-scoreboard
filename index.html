@@ -1113,7 +1113,7 @@
                     const isEliminationRound = player.lastEliminatedRound === index && score !== '-';
                     const cellClass = [
                         'text-center',
-                        isWinner ? 'bg-green-800 text-white' : '',
+                        isWinner ? 'bg-green-500 font-bold text-black' : '',
                         isRejoinRound ? 'bg-amber-500 text-white' : '',
                         player.eliminated && !isWinner && !isRejoinRound ? 'eliminated-score' : ''
                     ].filter(Boolean).join(' ');
