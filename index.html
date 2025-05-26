@@ -1104,7 +1104,7 @@
             let tableHTML = '';
 
             roundScores.forEach((roundData, index) => {
-                tableHTML += `<tr><td class="p-1">${index + 1}</td>`;
+                tableHTML += `<tr><td class="p-1 text-center font-bold">${index + 1}</td>`;
                 players.forEach(player => {
                     const score = roundData[player.name] !== undefined ? roundData[player.name] : '-';
                     const displayScore = score === 0 ? 'R' : score;
