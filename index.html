@@ -1136,7 +1136,7 @@
 
             // To Eliminate row
             tableHTML += `<tr class="bg-light-purple"><td class="p-1 font-bold">Oaks Rem:</td>${players.map(player => {
-                const toEliminate = player.eliminated ? '-' : TARGET_SCORE - player.totalScore + 1;
+                const toEliminate = player.eliminated ? '-' : TARGET_SCORE - player.totalScore;
                 const toEliminateCellClass = player.eliminated ? 'text-center eliminated-score' : 'text-center';
                 return `<td class="p-1 ${toEliminateCellClass}">${toEliminate}</td>`;
             }).join('')}</tr>`;
