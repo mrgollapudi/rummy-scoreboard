@@ -1,0 +1,28 @@
+name: Update Last Commit Date
+
+on:
+  push:
+    branches:
+      - main  # change this if your default branch is different
+
+jobs:
+  update-footer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get last commit date
+        id: commit
+        run: echo "LAST_COMMIT_DATE=$(git log -1 --date=short --format='%cd %cr')" >> $GITHUB_ENV
+
+      - name: Replace placeholder in index.html
+        run: |
+          sed -i "s/{{LAST_COMMIT_DATE}}/${{ env.LAST_COMMIT_DATE }}/g" index.html
+
+      - name: Commit and push updated file
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git commit -am "Update last commit date in footer"
+          git push
