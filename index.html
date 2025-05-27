@@ -1145,6 +1145,18 @@ if (activePlayersAfter.length <= 1) {
             }
 
             els.leaderboardTable.innerHTML = tableHTML;
+            // ✅ Hide End Game button if there is only one player left
+        const activePlayers = players.filter(p => !p.eliminated);
+        const manualEndBtn = document.getElementById('manualEndButton');
+
+        if (manualEndBtn) {
+            if (activePlayers.length <= 1) {
+            manualEndBtn.classList.add('hidden');
+            } else {
+        manualEndBtn.classList.remove('hidden');
+    }
+}
+
         }
 
         function endGame(isManualEnd = false) {
