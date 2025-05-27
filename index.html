@@ -1066,9 +1066,10 @@ const canAnyoneRejoin = players.some(p =>
     Math.max(...players.filter(p => !p.eliminated).map(p => p.totalScore)) <= REJOIN_THRESHOLD
 );
 
-if (activePlayersAfter.length <= 1 && !canAnyoneRejoin) {
+if (activePlayersAfter.length <= 1) {
     endGame();
-} else {
+}
+ else {
     updateScoreForm();
     updateLeaderboard();
 }
@@ -1179,6 +1180,8 @@ if (activePlayersAfter.length <= 1 && !canAnyoneRejoin) {
 
         function endGame(isManualEnd = false) {
             if (isReadOnly || !gameStarted) return;
+            // 🔻 Hide Add Extra Player controls when game ends
+            els.extraPlayerControls.classList.add('hidden');
             els.scoreInput.classList.add('hidden');
             els.gameOver.classList.remove('hidden');
             const activePlayers = players.filter(p => !p.eliminated);
