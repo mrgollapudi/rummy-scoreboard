@@ -536,41 +536,24 @@
         }
 
         function generateShareLink() {
-            if (!gameStarted) {
-                alert('Start a game to share the score board.');
+            const leaderboardElement = document.getElementById('leaderboard');
+            if (!leaderboardElement) {
+                alert('Leaderboard not found.');
                 return;
             }
-            const gameData = {
-                gameName,
-                startDateTime,
-                targetScore: TARGET_SCORE,
-                totalBetAmount: calculateTotalBetAmount(),
-                players: players.map(p => ({
-                    name: p.name,
-                    initialBetAmount: p.initialBetAmount,
-                    betAmount: p.betAmount,
-                    totalScore: p.totalScore,
-                    roundsWon: p.roundsWon,
-                    eliminated: p.eliminated,
-                    rejoinCount: p.rejoinCount,
-                    lastEliminatedRound: p.lastEliminatedRound,
-                    rejoinRounds: p.rejoinRounds
-                })),
-                roundScores: roundScores.map(round => ({ ...round }))
-            };
-            const id = saveSharedGame(gameData);
-            if (!id) return;
-            const shareUrl = `${window.location.href.split('?')[0]}?id=${id}`;
-            if (navigator.clipboard && navigator.clipboard.write) {
-                navigator.clipboard.write(shareUrl).then(() => {
-                    alert('Shareable link copied to clipboard: ' + shareUrl);
-                }).catch(() => {
-                    showCopyPrompt(shareUrl);
-                });
-            } else {
-                showCopyPrompt(shareUrl);
-            }
+
+            html2canvas(leaderboardElement).then(canvas => {
+                // Create a downloadable image
+                const link = document.createElement('a');
+                link.download = `${gameName || 'Rummy_Leaderboard'}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            }).catch(err => {
+                console.error('Screenshot failed:', err);
+                alert('Failed to capture the leaderboard. Try again.');
+            });
         }
+
 
         function generateHistoryShareLink(startDateTime) {
             const game = gameHistory.find(g => g.startDateTime === startDateTime);
@@ -1341,5 +1324,7 @@ function addExtraPlayer() {
         // Load game state on page load
         loadGameState();
     </script>
+    <!-- Load html2canvas for screenshot functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </body>
 </html>
