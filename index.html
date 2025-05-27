@@ -1185,7 +1185,7 @@ if (activePlayersAfter.length <= 1) {
                     : 'Winnings can only be calculated if at least 40% of the players are eliminated or no drops remain.';
                 els.gameOverButtons.innerHTML = `
                     <button onclick="resumeGame()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Resume Game</button>
-                    <button onclick="resetGame()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">New Game</button>
+                    <button onclick="resetGame()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">New Game</button>
                 `;
             } else if (activePlayers.length === 1) {
                 els.winnerText.textContent = `Winner: ${getPlayerDisplayName(activePlayers[0])} with ${activePlayers[0].totalScore} points!`;
@@ -1193,7 +1193,7 @@ if (activePlayersAfter.length <= 1) {
                     ? `Winnings:<br>${winnings.map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join('<br>')}`
                     : 'Winnings can only be calculated if at least 40% of the players are eliminated or no drops remain.';
                 els.gameOverButtons.innerHTML = `
-                    <button onclick="resetGame()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">New Game</button>
+                    <button onclick="resetGame()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">New Game</button>
                 `;
             } else if (!hasDrops) {
                 els.winnerText.textContent = 'Game ended with no drops remaining.';
@@ -1202,7 +1202,7 @@ if (activePlayersAfter.length <= 1) {
                     : 'No winnings calculated.';
                 els.gameOverButtons.innerHTML = `
                     <button onclick="resumeGame()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Resume Game</button>
-                    <button onclick="resetGame()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">New Game</button>
+                    <button onclick="resetGame()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">New Game</button>
                 `;
             } else {
                 els.winnerText.textContent = 'Game ended with no clear winner.';
@@ -1211,7 +1211,7 @@ if (activePlayersAfter.length <= 1) {
                     : 'Winnings can only be calculated if at least 40% of the players are eliminated or no drops remain.';
                 els.gameOverButtons.innerHTML = `
                     <button onclick="resumeGame()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Resume Game</button>
-                    <button onclick="resetGame()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">New Game</button>
+                    <button onclick="resetGame()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">New Game</button>
                 `;
             }
             
