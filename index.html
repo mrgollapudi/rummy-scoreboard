@@ -331,12 +331,9 @@
         </div>
 
         <!-- Footer -->
-        <footer class="footer text-center text-sm text-gray-600 mt-4">
-            © 2025 MRGollapudi. <br>
-            Last updated: {{LAST_COMMIT_DATE}}
+        <footer class="footer">
+            Copyright © 2025 MRGollapudi. All rights reserved.
         </footer>
-
-
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.min.js"></script>
@@ -590,31 +587,20 @@
         }
 
         function saveGameState() {
-    if (!isReadOnly) {
-        sessionStorage.setItem('rummyGameState', JSON.stringify({
-            players,
-            round,
-            gameStarted,
-            roundScores,
-            TARGET_SCORE,
-            REJOIN_THRESHOLD,
-            gameName,
-            startDateTime,
-            isEditing
-        }));
-
-        // ✅ Save and display timestamp
-        const now = new Date();
-        const timestamp = now.toLocaleString();
-        localStorage.setItem('rummyLastSavedTime', timestamp);
-
-        const savedTimeElement = document.getElementById('lastSavedTime');
-        if (savedTimeElement) {
-            savedTimeElement.textContent = `Last committed: ${timestamp}`;
+            if (!isReadOnly) {
+                sessionStorage.setItem('rummyGameState', JSON.stringify({
+                    players,
+                    round,
+                    gameStarted,
+                    roundScores,
+                    TARGET_SCORE,
+                    REJOIN_THRESHOLD,
+                    gameName,
+                    startDateTime,
+                    isEditing
+                }));
+            }
         }
-    }
-}
-
 
         function loadGameState() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -945,20 +931,12 @@
 
         function updateScoreForm() {
             if (isReadOnly) return;
-
             const isGameOver = !els.gameOver.classList.contains('hidden');
-
             els.scoreInputTitle.innerHTML = isEditing 
                 ? `Edit Scores for Round <span id="roundNumber">${round - 1}</span>`
                 : `Enter Scores for Round <span id="roundNumber">${round}</span>`;
-
-            // 👇 Include all players when editing, otherwise only non-eliminated ones
-            const playersToShow = isEditing 
-                ? players.filter(p => roundScores[round - 2] && roundScores[round - 2].hasOwnProperty(p.name))
-                : players.filter(p => !p.eliminated);
-
             const activePlayers = players.filter(p => !p.eliminated);
-            els.scoreForm.innerHTML = playersToShow.map(player => {
+            els.scoreForm.innerHTML = activePlayers.map(player => {
                 let selectedValue = isEditing && roundScores.length > 0 
                     ? roundScores[roundScores.length - 1][player.name] 
                     : 24;
@@ -979,10 +957,9 @@
                 `;
             }).join('');
 
-            playersToShow.forEach(player => {
-                    const select = document.getElementById(`score_${player.name}`);
-                    const entryInput = document.getElementById(`entry_${player.name}`);
-
+            activePlayers.forEach(player => {
+                const select = document.getElementById(`score_${player.name}`);
+                const entryInput = document.getElementById(`entry_${player.name}`);
                 if (select && entryInput) {
                     select.addEventListener('change', () => {
                         entryInput.classList.toggle('hidden', select.value !== 'entry');
@@ -1089,9 +1066,10 @@ const canAnyoneRejoin = players.some(p =>
     Math.max(...players.filter(p => !p.eliminated).map(p => p.totalScore)) <= REJOIN_THRESHOLD
 );
 
-if (activePlayersAfter.length <= 1 && !canAnyoneRejoin) {
+if (activePlayersAfter.length <= 1) {
     endGame();
-} else {
+}
+ else {
     updateScoreForm();
     updateLeaderboard();
 }
@@ -1202,6 +1180,8 @@ if (activePlayersAfter.length <= 1 && !canAnyoneRejoin) {
 
         function endGame(isManualEnd = false) {
             if (isReadOnly || !gameStarted) return;
+            // 🔻 Hide Add Extra Player controls when game ends
+            els.extraPlayerControls.classList.add('hidden');
             els.scoreInput.classList.add('hidden');
             els.gameOver.classList.remove('hidden');
             const activePlayers = players.filter(p => !p.eliminated);
@@ -1344,16 +1324,8 @@ function addExtraPlayer() {
             updateGameHistory();
         }
 
-        /// Load game state on page load
+        // Load game state on page load
         loadGameState();
-
-        // ✅ Show last saved time if available
-        const savedTimestamp = localStorage.getItem('rummyLastSavedTime');
-        const savedTimeElement = document.getElementById('lastSavedTime');
-        if (savedTimeElement && savedTimestamp) {
-            savedTimeElement.textContent = `Last committed: ${savedTimestamp}`;
-        }
-
     </script>
     <!-- Load html2canvas for screenshot functionality -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
