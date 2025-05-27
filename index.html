@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -331,9 +292,10 @@
         </div>
 
         <!-- Footer -->
-        <footer class="footer">
-            Copyright © 2025 MRGollapudi. All rights reserved.
+        <footer class="footer text-center text-sm text-gray-600 mt-4">
+          © 2025 MRGollapudi — Last updated: <span id="commitDate">{{LAST_COMMIT_DATE}}</span>
         </footer>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.min.js"></script>
@@ -935,8 +897,11 @@
             els.scoreInputTitle.innerHTML = isEditing 
                 ? `Edit Scores for Round <span id="roundNumber">${round - 1}</span>`
                 : `Enter Scores for Round <span id="roundNumber">${round}</span>`;
-            const activePlayers = players.filter(p => !p.eliminated);
-            els.scoreForm.innerHTML = activePlayers.map(player => {
+            const playersToShow = isEditing
+                    ? players.filter(p => roundScores[round - 2] && roundScores[round - 2].hasOwnProperty(p.name))
+                    : players.filter(p => !p.eliminated);
+
+            els.scoreForm.innerHTML = playersToShow.map(player => {
                 let selectedValue = isEditing && roundScores.length > 0 
                     ? roundScores[roundScores.length - 1][player.name] 
                     : 24;
@@ -957,9 +922,10 @@
                 `;
             }).join('');
 
-            activePlayers.forEach(player => {
+            playersToShow.forEach(player => {
                 const select = document.getElementById(`score_${player.name}`);
                 const entryInput = document.getElementById(`entry_${player.name}`);
+
                 if (select && entryInput) {
                     select.addEventListener('change', () => {
                         entryInput.classList.toggle('hidden', select.value !== 'entry');
@@ -1082,8 +1048,9 @@ if (activePlayersAfter.length <= 1) {
             const player = players.find(p => p.name === name);
             if (!player || !player.eliminated) return;
 
-            const activePlayers = players.filter(p => !p.eliminated);
-            const maxScore = activePlayers.length ? Math.max(...activePlayers.map(p => p.totalScore)) : 0;
+            const scores = players.filter(p => !p.eliminated).map(p => p.totalScore);
+            const maxScore = scores.length ? Math.max(...scores) : 0;
+
             if (maxScore <= REJOIN_THRESHOLD && player.lastEliminatedRound !== null && round === player.lastEliminatedRound + 1) {
                 player.eliminated = false;
                 player.rejoinCount += 1;
@@ -1166,11 +1133,13 @@ if (activePlayersAfter.length <= 1) {
             if (!isReadOnly) {
                 tableHTML += `<tr><td class="p-1"> Action </td>${players.map(player => {
                     const activePlayersCount = players.filter(p => !p.eliminated).length;
-        const canRejoin = player.eliminated &&
-            player.lastEliminatedRound !== null &&
-            round === player.lastEliminatedRound + 1 &&
-            activePlayersCount > 1 && // 👈 Prevent rejoin if a clear winner exists
-            Math.max(...players.filter(p => !p.eliminated).map(p => p.totalScore)) <= REJOIN_THRESHOLD;
+                const scores = players.filter(p => !p.eliminated).map(p => p.totalScore);
+                const maxScore = scores.length > 0 ? Math.max(...scores) : 0;
+                const canRejoin = player.eliminated &&
+                    player.lastEliminatedRound !== null &&
+                    round === player.lastEliminatedRound + 1 &&
+                    maxScore <= REJOIN_THRESHOLD;
+
                     return `<td class="p-1 text-center">${canRejoin ? `<button onclick="rejoinPlayer('${player.name}')" class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600">Rejoin</button>` : ''}</td>`;
                 }).join('')}</tr>`;
             }
