@@ -413,7 +413,7 @@
         }
 
         function calculateTotalBetAmount() {
-            return players.reduce((sum, player) => sum + player.betAmount, 0).toFixed(2);
+            return players.reduce((sum, player) => sum + player.betAmount, 0);
         }
 
         function calculateWinnings() {
@@ -884,7 +884,7 @@
             if (isReadOnly) return;
             els.playerList.innerHTML = players.map(player => `
                 <div class="bg-gray-100 p-1 rounded flex justify-between items-center">
-                    <span>${getPlayerDisplayName(player)} ($${player.betAmount.toFixed(2)})</span>
+                    <span>${getPlayerDisplayName(player)} ($${player.betAmount})</span>
                     <button onclick="removePlayer('${player.name}')" class="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600">Remove</button>
                 </div>
             `).join('');
