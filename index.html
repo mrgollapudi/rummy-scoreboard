@@ -258,13 +258,13 @@
                     <label for="playerName" class="sr-only">Player Names</label>
                     <input id="playerName" type="text" placeholder="Enter player names (e.g., Alice, Bob, Charlie)" class="border rounded p-2" style="width: 325px; height: 3rem;">
                     <label for="betAmount" class="sr-only">Bet Amount</label>
-                    <input id="betAmount" type="number" placeholder="Bet per player ($)" value="10" class="border rounded p-2" style="width: 100px;" min="0" step="0.01">
+                    <input id="betAmount" type="number" placeholder="Bet Amt" class="border rounded p-2" style="width: 100px;">
                     <button onclick="addPlayer()" class="bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-600 font-bold no-margin-right" style="width: 66px; text-align: center;">Add Players</button>
                 </div>
                 <div id="playerError" class="text-red-500 border-red-500 mt-1 hidden"></div>
                 <div class="flex gap-2">
                     <label for="targetScore" class="sr-only">Target Score</label>
-                    <input id="targetScore" type="number" placeholder="Enter target score (min 100)" class="border rounded p-2" style="width: 120px;">
+                    <input id="targetScore" type="number" placeholder="Set Target score" min="100" class="border rounded p-2" style="width: 120px;">
                     <button onclick="startGame()" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 font-bold">Start Game</button>
                 </div>
                 <div id="targetError" class="text-red-500 border-red-500 mt-1 hidden"></div>
