@@ -402,14 +402,7 @@
             historyTable: document.getElementById('historyTable'),
             gameOverButtons: document.getElementById('gameOverButtons')
         };
-
-        // Format bet amount input
-        els.betAmount.addEventListener('input', () => {
-            if (els.betAmount.value && !isReadOnly) {
-                els.betAmount.value = parseFloat(els.betAmount.value).toFixed(2);
-            }
-        });
-
+  
         function formatName(name) {
             return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
         }
