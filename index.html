@@ -279,11 +279,6 @@
             <div id="errorMessage" class="text-red-500 border-red-500 mt-1 hidden"></div>
             <div class="flex gap-2 mt-2" id="scoreButtons"></div>
         </div>
-        <div class="mt-2 editable hidden" id="extraPlayerControls">
-            <input id="extraPlayerName" type="text" placeholder="New player name" class="border rounded p-2" style="width: 200px;">
-            <button onclick="addExtraPlayer()" class="bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600">Add Extra Player</button>
-            <div id="extraPlayerError" class="text-red-500 mt-1 hidden"></div>
-        </div>
             
         <!-- Leaderboard -->
         <div id="leaderboard" class="mb-4">
@@ -298,7 +293,16 @@
                 <button onclick="generateShareLink()" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">Share Score Board</button>
             </div>
         </div>
-
+        <!-- ✅ New End Game Button Placement -->
+        <div class="mt-2 editable" id="manualEndButton">
+            <button onclick="endGame(true)" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 font-bold">End Game</button>
+        </div>
+         <!-- Add Extra Player -->    
+        <div class="mt-2 editable hidden" id="extraPlayerControls">
+            <input id="extraPlayerName" type="text" placeholder="New player name" class="border rounded p-2" style="width: 200px;">
+            <button onclick="addExtraPlayer()" class="bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600">Add Extra Player</button>
+            <div id="extraPlayerError" class="text-red-500 mt-1 hidden"></div>
+        </div>
         <!-- Game Over -->
         <div id="gameOver" class="hidden editable">
             <h2 class="text-xl font-semibold mb-2">Game Over!</h2>
@@ -984,7 +988,6 @@
             } else {
                 els.scoreButtons.innerHTML = `
                     <button onclick="submitScores()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">${isEditing ? 'Save Changes' : 'Submit Scores'}</button>
-                    <button onclick="endGame(true)" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">End Game</button>
                     ${roundScores.length > 0 ? `
                         <button onclick="editLastRound()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">${isEditing ? 'Cancel Edit' : 'Edit Last Round'}</button>
                     ` : ''}
