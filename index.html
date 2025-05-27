@@ -1185,7 +1185,7 @@ if (activePlayersAfter.length <= 1) {
                     ? `Potential Winnings:<br>${winnings.map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join('<br>')}`
                     : 'No Winnings, not even 40% of the players eliminated.';
                 els.gameOverButtons.innerHTML = `
-                    <button onclick="resumeGame()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Resume Game</button>
+                    <button onclick="resumeGame()" class="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600">Resume Game</button>
                     <button onclick="resetGame()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">New Game</button>
                 `;
             } else if (activePlayers.length === 1) {
@@ -1202,7 +1202,7 @@ if (activePlayersAfter.length <= 1) {
                     ? `Winnings (Equal Split):<br>${winnings.map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join('<br>')}`
                     : 'No winnings calculated.';
                 els.gameOverButtons.innerHTML = `
-                    <button onclick="resumeGame()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Resume Game</button>
+                    <button onclick="resumeGame()" class="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600">Resume Game</button>
                     <button onclick="resetGame()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">New Game</button>
                 `;
             } else {
@@ -1211,7 +1211,7 @@ if (activePlayersAfter.length <= 1) {
                     ? `Potential Winnings:<br>${winnings.map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join('<br>')}`
                     : 'No Winnings, not even 40% of the players eliminated.';
                 els.gameOverButtons.innerHTML = `
-                    <button onclick="resumeGame()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Resume Game</button>
+                    <button onclick="resumeGame()" class="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600">Resume Game</button>
                     <button onclick="resetGame()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">New Game</button>
                 `;
             }
