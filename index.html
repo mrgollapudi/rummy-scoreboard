@@ -331,9 +331,11 @@
         </div>
 
         <!-- Footer -->
-        <footer class="footer">
-            Copyright © 2025 MRGollapudi. All rights reserved.
+        <footer class="footer text-center text-sm text-gray-600 mt-4">
+            Copyright © 2025 MRGollapudi.
+            <span id="lastSavedTime" class="block mt-1">Last saved: never</span>
         </footer>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.min.js"></script>
@@ -587,20 +589,31 @@
         }
 
         function saveGameState() {
-            if (!isReadOnly) {
-                sessionStorage.setItem('rummyGameState', JSON.stringify({
-                    players,
-                    round,
-                    gameStarted,
-                    roundScores,
-                    TARGET_SCORE,
-                    REJOIN_THRESHOLD,
-                    gameName,
-                    startDateTime,
-                    isEditing
-                }));
-            }
+    if (!isReadOnly) {
+        sessionStorage.setItem('rummyGameState', JSON.stringify({
+            players,
+            round,
+            gameStarted,
+            roundScores,
+            TARGET_SCORE,
+            REJOIN_THRESHOLD,
+            gameName,
+            startDateTime,
+            isEditing
+        }));
+
+        // ✅ Save and display timestamp
+        const now = new Date();
+        const timestamp = now.toLocaleString();
+        localStorage.setItem('rummyLastSavedTime', timestamp);
+
+        const savedTimeElement = document.getElementById('lastSavedTime');
+        if (savedTimeElement) {
+            savedTimeElement.textContent = `Last committed: ${timestamp}`;
         }
+    }
+}
+
 
         function loadGameState() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -1330,8 +1343,16 @@ function addExtraPlayer() {
             updateGameHistory();
         }
 
-        // Load game state on page load
+        /// Load game state on page load
         loadGameState();
+
+        // ✅ Show last saved time if available
+        const savedTimestamp = localStorage.getItem('rummyLastSavedTime');
+        const savedTimeElement = document.getElementById('lastSavedTime');
+        if (savedTimeElement && savedTimestamp) {
+            savedTimeElement.textContent = `Last committed: ${savedTimestamp}`;
+        }
+
     </script>
     <!-- Load html2canvas for screenshot functionality -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
