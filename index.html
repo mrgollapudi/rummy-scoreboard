@@ -1183,7 +1183,7 @@ if (activePlayersAfter.length <= 1) {
                     : 'Game ended manually. No active players.';
                 els.winningsText.innerHTML = winnings && winnings.length > 0 
                     ? `Potential Winnings:<br>${winnings.map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join('<br>')}`
-                    : 'Winnings can only be calculated if at least 40% of the players are eliminated or no drops remain.';
+                    : 'No Winnings, not even 40% of the players eliminated.';
                 els.gameOverButtons.innerHTML = `
                     <button onclick="resumeGame()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Resume Game</button>
                     <button onclick="resetGame()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">New Game</button>
@@ -1192,7 +1192,7 @@ if (activePlayersAfter.length <= 1) {
                 els.winnerText.textContent = `Winner: ${getPlayerDisplayName(activePlayers[0])} with ${activePlayers[0].totalScore} points!`;
                 els.winningsText.innerHTML = winnings && winnings.length > 0 
                     ? `Winnings:<br>${winnings.map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join('<br>')}`
-                    : 'Winnings can only be calculated if at least 40% of the players are eliminated or no drops remain.';
+                    : 'No Winnings, not even 40% of the players eliminated.';
                 els.gameOverButtons.innerHTML = `
                     <button onclick="resetGame()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">New Game</button>
                 `;
@@ -1209,7 +1209,7 @@ if (activePlayersAfter.length <= 1) {
                 els.winnerText.textContent = 'Game ended with no clear winner.';
                 els.winningsText.innerHTML = winnings && winnings.length > 0 
                     ? `Potential Winnings:<br>${winnings.map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join('<br>')}`
-                    : 'Winnings can only be calculated if at least 40% of the players are eliminated or no drops remain.';
+                    : 'No Winnings, not even 40% of the players eliminated.';
                 els.gameOverButtons.innerHTML = `
                     <button onclick="resumeGame()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Resume Game</button>
                     <button onclick="resetGame()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">New Game</button>
