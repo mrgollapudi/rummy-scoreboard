@@ -644,7 +644,7 @@
     const winnings = calculateWinnings();
     let result = winnings
         ? winnings.filter(w => w.winnings !== 0).map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join(', ')
-        : 'Winnings can only be calculated if at least 40% of players are eliminated or no drops remain.';
+        : 'NO Winnings, not even 40% of the players eliminated';
 
     if (els.winnerText.textContent.includes('manually')) {
         result = `Manual End: ${result}`;
