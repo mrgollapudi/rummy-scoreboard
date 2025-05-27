@@ -218,14 +218,14 @@
                 <div class="flex flex-wrap gap-2">
                     <label for="playerName" class="sr-only">Player Names</label>
                     <input id="playerName" type="text" placeholder="Enter player names (e.g., Alice, Bob, Charlie)" class="border rounded p-2" style="width: 325px; height: 3rem;">
-                    <input id="betAmount" type="number" placeholder="Bet Amt" value="10" class="border rounded p-2" style="width: 100px;">
+                    <input id="betAmount" type="number" placeholder="Bet Amt" value="10" class="border rounded p-2" style="width: 120px;">
                     <button onclick="addPlayer()" class="bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-600 font-bold no-margin-right" style="width: 66px; text-align: center;">Add Players</button>
-                    <label for="betAmount" class="text-sm text-gray-500">Bet Amount (default: $10)</label>
+                    <br><label for="betAmount" class="text-sm text-gray-500">Bet Amount (default: $10)</label>
                 </div>
                 <div id="playerError" class="text-red-500 border-red-500 mt-1 hidden"></div>
                 <div class="flex gap-2">
                     <label for="targetScore" class="sr-only">Target Score</label>
-                    <input id="targetScore" type="number" placeholder="Set Target score" min="100" class="border rounded p-2" style="width: 100px; height: 3rem;">
+                    <input id="targetScore" type="number" placeholder="Set Target score" min="100" class="border rounded p-2" style="width: 120px; height: 3rem;">
                     <button onclick="startGame()" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 font-bold">Start Game</button>
                 </div>
                 <div id="targetError" class="text-red-500 border-red-500 mt-1 hidden"></div>
@@ -293,7 +293,8 @@
 
         <!-- Footer -->
         <footer class="footer text-center text-sm text-gray-600 mt-4">
-          © 2025 MRGollapudi — Last updated: <span id="commitDate">{{LAST_COMMIT_DATE}}</span>
+          © 2025 MRGollapudi. 
+            <!-- — Last updated: <span id="commitDate">{{LAST_COMMIT_DATE}}</span> -->
         </footer>
 
     </div>
