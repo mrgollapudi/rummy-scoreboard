@@ -279,7 +279,12 @@
             <div id="errorMessage" class="text-red-500 border-red-500 mt-1 hidden"></div>
             <div class="flex gap-2 mt-2" id="scoreButtons"></div>
         </div>
-
+        <div class="mt-2 editable hidden" id="extraPlayerControls">
+            <input id="extraPlayerName" type="text" placeholder="New player name" class="border rounded p-2" style="width: 200px;">
+            <button onclick="addExtraPlayer()" class="bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600">Add Extra Player</button>
+            <div id="extraPlayerError" class="text-red-500 mt-1 hidden"></div>
+        </div>
+            
         <!-- Leaderboard -->
         <div id="leaderboard" class="mb-4">
             <h2 class="text-xl font-semibold mb-2">Leaderboard - <span id="leaderboardGameName">Untitled</span> (Total Bet: $<span id="totalBetAmount">0.00</span>)</h2>
@@ -931,6 +936,9 @@
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
+            // ✅ Show Add Extra Player input
+            document.getElementById('extraPlayerControls').classList.remove('hidden');
+
         }
 
         function updateScoreForm() {
@@ -1249,6 +1257,53 @@ if (activePlayersAfter.length <= 1 && !canAnyoneRejoin) {
             updateLeaderboard();
             saveGameState();
         }
+function addExtraPlayer() {
+    if (!gameStarted || isReadOnly) return;
+
+    const nameInput = document.getElementById('extraPlayerName');
+    const errorBox = document.getElementById('extraPlayerError');
+    const name = formatName(nameInput.value.trim());
+    
+    if (!name) {
+        errorBox.textContent = 'Player name is required.';
+        errorBox.classList.remove('hidden');
+        return;
+    }
+
+    if (players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
+        errorBox.textContent = 'Player name must be unique.';
+        errorBox.classList.remove('hidden');
+        return;
+    }
+
+    const initialBet = players.length > 0 ? players[0].initialBetAmount : 0;
+    const highestScore = Math.max(...players.map(p => p.totalScore));
+
+    const newPlayer = {
+        name,
+        initialBetAmount: initialBet,
+        betAmount: initialBet,
+        totalScore: highestScore,
+        roundsWon: 0,
+        eliminated: false,
+        rejoinCount: 0,
+        lastEliminatedRound: null,
+        rejoinRounds: []
+    };
+
+    // Fill previous rounds with '-' for this player
+    roundScores.forEach(round => {
+        round[name] = '-';
+    });
+
+    players.push(newPlayer);
+    nameInput.value = '';
+    errorBox.classList.add('hidden');
+
+    updateScoreForm();
+    updateLeaderboard();
+    saveGameState();
+}
 
         function resetGame() {
             if (isReadOnly) return;
@@ -1271,6 +1326,8 @@ if (activePlayersAfter.length <= 1 && !canAnyoneRejoin) {
             els.targetScore.value = '';
             els.targetDisplay.classList.add('hidden');
             els.playerError.classList.add('hidden');
+             // ✅ Hide Add Extra Player controls
+            document.getElementById('extraPlayerControls').classList.add('hidden');
             updatePlayerList();
             updateLeaderboard();
             sessionStorage.removeItem('rummyGameState');
