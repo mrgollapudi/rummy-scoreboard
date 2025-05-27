@@ -388,6 +388,7 @@
         const els = {
             playerSetup: document.getElementById('playerSetup'),
             scoreInput: document.getElementById('scoreInput'),
+            extraPlayerControls: document.getElementById('extraPlayerControls'),
             gameOver: document.getElementById('gameOver'),
             targetScore: document.getElementById('targetScore'),
             targetDisplay: document.getElementById('targetDisplay'),
@@ -941,7 +942,7 @@
             updateLeaderboard();
             saveGameState();
             // ✅ Show Add Extra Player input
-            document.getElementById('extraPlayerControls').classList.remove('hidden');
+            els.extraPlayerControls.classList.remove('hidden');
 
         }
 
@@ -1330,7 +1331,7 @@ function addExtraPlayer() {
             els.targetDisplay.classList.add('hidden');
             els.playerError.classList.add('hidden');
              // ✅ Hide Add Extra Player controls
-            document.getElementById('extraPlayerControls').classList.add('hidden');
+            els.extraPlayerControls.classList.add('hidden');
             updatePlayerList();
             updateLeaderboard();
             sessionStorage.removeItem('rummyGameState');
