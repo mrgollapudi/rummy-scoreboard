@@ -649,8 +649,8 @@
                         ${isEditing ? 'Save Changes' : 'Submit Scores'}
                     </button>
                     ${roundScores.length > 0 ? `
-                        <button onclick="${isEditing ? 'cancelEditLastRound()' : 'editLastRound()'}" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
-                                          ${isEditing ? 'Cancel Edit' : 'Edit Last Round'}
+                        <button onclick="editLastRound()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+                    ${isEditing ? 'Cancel Edit' : 'Edit Last Round'}
                         </button>
                     ` : ''}
                         `;
@@ -661,7 +661,7 @@
 
 
         function editLastRound() {
-            if (isReadOnly || roundScores.length === 0 || !els.gameOver.classList.contains('hidden') || isEditing) return;
+            if (isReadOnly || roundScores.length === 0 || !els.gameOver.classList.contains('hidden')) return;
 
             isEditing = true;
 
@@ -670,127 +670,139 @@
 
             players.forEach(player => {
                 const lastScore = lastRoundScores[player.name];
+
                 if (typeof lastScore === 'number') {
                     player.totalScore -= lastScore;
-                    if (lastScore === 0) player.roundsWon -= 1;
 
-                    if (player.eliminated && player.lastEliminatedRound === lastRoundIndex) {
+                    if (lastScore === 0) {
+                player.roundsWon -= 1;
+                    }
+
+                    if (player.eliminated && player.lastEliminatedRound === round - 1) {
                         player.eliminated = false;
                         player.lastEliminatedRound = null;
                     }
                 }
             });
 
+            // ✅ Do NOT pop or modify roundScores or round
+            // Form will overwrite roundScores[lastRoundIndex] directly
+
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
         }
-        
-        function cancelEditLastRound() {
-            if (!isEditing || roundScores.length === 0) return;
 
-            const lastRoundIndex = roundScores.length - 1;
-            const lastRoundScores = roundScores[lastRoundIndex];
 
-            players.forEach(player => {
-                const lastScore = lastRoundScores[player.name];
-                if (typeof lastScore === 'number') {
-                    player.totalScore += lastScore;
-                    if (lastScore === 0) player.roundsWon += 1;
+        function submitScores() {
+            if (isReadOnly) return;
+            const scores = [];
+            const errors = [];
+            const currentRoundScores = {};
+            let winnerCount = 0;
 
-                    // Reapply elimination if they should have been eliminated
-                    if (player.totalScore > TARGET_SCORE) {
-                        player.eliminated = true;
-                        player.lastEliminatedRound = lastRoundIndex;
+            const playersToScore = isEditing
+            ? players.filter(p => roundScores[roundScores.length - 1]?.hasOwnProperty(p.name))
+            : players.filter(p => !p.eliminated);
+                
+                playersToScore.forEach(player => {
+
+                const select = document.getElementById(`score_${player.name}`);
+                let score;
+                    // Fix: Check if select exists
+                if (!select) {
+                        errors.push(`Score input for ${getPlayerDisplayName(player)} not found.`);
+                        return;
+                }
+                if (select.value === 'entry') {
+                    const entryInput = document.getElementById(`entry_${player.name}`);
+                    score = parseInt(entryInput.value) || 0;
+                    if (score < 2 || score > 80) {
+                        errors.push(`${getPlayerDisplayName(player)}'s entry score must be 2-80.`);
+                        entryInput.classList.add('border-red-500');
+                        return;
                     }
+                    entryInput.classList.remove('border-red-500');
+                } else {
+                    score = parseInt(select.value);
+                }
+                scores.push({ player, score });
+                currentRoundScores[player.name] = score;
+                if (score === 0) winnerCount++;
+            });
+
+            if (winnerCount !== 1) errors.push('Exactly one player must be the winner (R).');
+
+            if (errors.length) {
+                els.errorMessage.innerHTML = errors.join('<br>');
+                els.errorMessage.classList.remove('hidden');
+                return;
+            }
+            els.errorMessage.classList.add('hidden');
+
+            if (isEditing) {
+               const lastRoundIndex = roundScores.length - 1;
+               const lastRoundScores = roundScores[lastRoundIndex];
+
+               players.forEach(player => {
+                const oldScore = lastRoundScores[player.name] || 0;
+                const newScore = currentRoundScores[player.name] || 0;
+
+                player.totalScore = player.totalScore - oldScore + newScore;
+
+                if (oldScore === 0) player.roundsWon -= 1;
+                if (newScore === 0) player.roundsWon += 1;
+
+                const wasEliminated = player.eliminated;
+                player.eliminated = player.totalScore > TARGET_SCORE;
+
+                if (!wasEliminated && player.eliminated) {
+                    player.lastEliminatedRound = round - 1;
+                } else if (wasEliminated && !player.eliminated) {
+                    player.lastEliminatedRound = null;
                 }
             });
 
+            // ✅ This line updates the last round — not adds a new one
+            roundScores[lastRoundIndex] = currentRoundScores;
+
             isEditing = false;
-            updateScoreForm();
-            updateLeaderboard();
+        }
+         else {
+                roundScores.push(currentRoundScores);
+                round++;
+                scores.forEach(({ player, score }) => {
+                    player.totalScore += score;
+                    if (score === 0) player.roundsWon += 1;
+                    const wasEliminated = player.eliminated;
+                    player.eliminated = player.totalScore > TARGET_SCORE;
+                    if (!wasEliminated && player.eliminated) {
+                        player.lastEliminatedRound = round - 1;
+                    } else if (wasEliminated && !player.eliminated) {
+                        player.lastEliminatedRound = null;
+                    }
+                });
+            }
+
+          const activePlayersAfter = players.filter(p => !p.eliminated);
+        const canAnyoneRejoin = players.some(p => 
+            p.eliminated && 
+            p.lastEliminatedRound !== null && 
+            round === p.lastEliminatedRound + 1 &&
+            Math.max(...players.filter(p => !p.eliminated).map(p => p.totalScore)) <= REJOIN_THRESHOLD
+        );
+
+            if (activePlayersAfter.length <= 1) {
+                updateLeaderboard();
+                updateGameHistory();
+                endGame();
+            } else {
+                updateScoreForm();
+                updateLeaderboard();
+                updateGameHistory();
+            }
             saveGameState();
         }
-
-        function submitScores() {
-    if (isReadOnly) return;
-
-    const errors = [];
-    const currentRoundScores = {};
-    let winnerCount = 0;
-
-    // Determine who to show
-    const playersToScore = isEditing
-        ? players.filter(p => roundScores[roundScores.length - 1]?.hasOwnProperty(p.name))
-        : players.filter(p => !p.eliminated);
-
-    // Step 1: Collect scores from form
-    playersToScore.forEach(player => {
-        const select = document.getElementById(`score_${player.name}`);
-        if (!select) {
-            errors.push(`Missing score input for ${player.name}`);
-            return;
-        }
-
-        let score;
-        if (select.value === 'entry') {
-            const entryInput = document.getElementById(`entry_${player.name}`);
-            score = parseInt(entryInput.value) || 0;
-            if (score < 2 || score > 80) {
-                errors.push(`${player.name}'s custom score must be between 2 and 80.`);
-                entryInput.classList.add('border-red-500');
-                return;
-            }
-            entryInput.classList.remove('border-red-500');
-        } else {
-            score = parseInt(select.value);
-        }
-
-        currentRoundScores[player.name] = score;
-        if (score === 0) winnerCount++;
-    });
-
-    // Step 2: Validate exactly one winner
-    if (winnerCount !== 1) {
-        errors.push('Exactly one player must have a score of 0 (R).');
-    }
-
-    if (errors.length > 0) {
-        els.errorMessage.innerHTML = errors.join('<br>');
-        els.errorMessage.classList.remove('hidden');
-        return;
-    }
-
-    els.errorMessage.classList.add('hidden');
-
-    // Step 3: Apply scores
-    if (isEditing) {
-        const lastRoundIndex = roundScores.length - 1;
-        const lastRoundScores = roundScores[lastRoundIndex];
-
-        playersToScore.forEach(player => {
-            const oldScore = lastRoundScores[player.name] || 0;
-            const newScore = currentRoundScores[player.name];
-
-            player.totalScore = player.totalScore - oldScore + newScore;
-
-            if (oldScore === 0) player.roundsWon -= 1;
-            if (newScore === 0) player.roundsWon += 1;
-
-            const wasEliminated = player.eliminated;
-            player.eliminated = player.totalScore > TARGET_SCORE;
-
-            if (!wasEliminated && player.eliminated) {
-                player.lastEliminatedRound = round - 1;
-            } else if (wasEliminated && !player.eliminated) {
-                player.lastEliminatedRound = null;
-            }
-        });
-
-        roundScores[lastRoundIndex] = currentRoundScores;
-        isEditing = false;
-    } else {
-
 
         function rejoinPlayer(name) {
             if (isReadOnly) return;
