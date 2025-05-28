@@ -605,19 +605,23 @@
                 let isEntry = isEditing && ![0, 24, 40, 80].includes(selectedValue);
                 if (isEntry && selectedValue === undefined) selectedValue = '';
                 return `
-                    <div class="flex flex-col gap-1 w-10">
-                        <label class="font-medium text-sm" title="${getPlayerDisplayName(player)}">${getPlayerDisplayName(player)}</label>
-                        <select id="score_${player.name}" class="border rounded p-1 text-sm">
-                            <option value="0" ${selectedValue === 0 ? 'selected' : ''}>R (0)</option>
-                            <option value="24" ${selectedValue === 24 ? 'selected' : ''}>D (24)</option>
-                            <option value="40" ${selectedValue === 40 ? 'selected' : ''}>MD (40)</option>
-                            <option value="80" ${selectedValue === 80 ? 'selected' : ''}>FC (80)</option>
-                            <option value="entry" ${isEntry ? 'selected' : ''}>Input:</option>
-                        </select>
-                        <input id="entry_${player.name}" type="number" placeholder="2-80" value="${isEntry ? selectedValue : ''}" class="border rounded p-1 text-sm w-10 ${isEntry ? '' : 'hidden'}" min="2" max="80">
-                    </div>
-                `;
-            }).join('');
+                  <div class="flex flex-col gap-1 w-10">
+                    <label for="score_${player.name}" class="font-medium text-sm" title="${getPlayerDisplayName(player)}">
+                      ${getPlayerDisplayName(player)}
+                    </label>
+            <select id="score_${player.name}" class="border rounded p-1 text-sm">
+              <option value="0" ${selectedValue === 0 ? 'selected' : ''}>R (0)</option>
+              <option value="24" ${selectedValue === 24 ? 'selected' : ''}>D (24)</option>
+              <option value="40" ${selectedValue === 40 ? 'selected' : ''}>MD (40)</option>
+              <option value="80" ${selectedValue === 80 ? 'selected' : ''}>FC (80)</option>
+              <option value="entry" ${isEntry ? 'selected' : ''}>Input:</option>
+            </select>
+            <label for="entry_${player.name}" class="sr-only">Custom Score for ${getPlayerDisplayName(player)}</label>
+            <input id="entry_${player.name}" type="number" placeholder="2-80" value="${isEntry ? selectedValue : ''}"
+              class="border rounded p-1 text-sm w-10 ${isEntry ? '' : 'hidden'}"
+              min="2" max="80">
+          </div>
+        `;
 
             playersToShow.forEach(player => {
                 const select = document.getElementById(`score_${player.name}`);
