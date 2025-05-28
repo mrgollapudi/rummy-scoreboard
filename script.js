@@ -175,26 +175,7 @@
             return id;
         }
 
-        function showCopyPrompt(shareUrl) {
-            // Create a temporary input element to facilitate copying
-            const tempInput = document.createElement('input');
-            tempInput.value = shareUrl;
-            tempInput.style.position = 'absolute';
-            tempInput.style.left = '-9999px';
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            try {
-                document.execCommand('copy');
-                alert('Shareable link copied to clipboard: ' + shareUrl);
-            } catch (err) {
-                // Fallback to prompt if execCommand fails
-                prompt('Failed to copy automatically. Press Ctrl+C to copy the shareable link:', shareUrl);
-            } finally {
-                document.body.removeChild(tempInput);
-            }
-        }
-
-        function generateShareLink() {
+       function generateShareLink() {
             const leaderboardElement = document.getElementById('leaderboard');
             if (!leaderboardElement) {
                 alert('Leaderboard not found.');
@@ -212,7 +193,6 @@
                 alert('Failed to capture the leaderboard. Try again.');
             });
         }
-
 
         function generateHistoryShareLink(startDateTime) {
             const game = gameHistory.find(g => g.startDateTime === startDateTime);
