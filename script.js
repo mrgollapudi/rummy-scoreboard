@@ -725,13 +725,10 @@
                const lastRoundScores = roundScores[lastRoundIndex];
 
                players.forEach(player => {
-                const oldScore = lastRoundScores[player.name] || 0;
-                const newScore = currentRoundScores[player.name] || 0;
-
-                player.totalScore = player.totalScore - oldScore + newScore;
-
-                if (oldScore === 0) player.roundsWon -= 1;
-                if (newScore === 0) player.roundsWon += 1;
+                       const newScore = currentRoundScores[player.name] || 0;
+                       //oldScore was already subtracted in editLastRound
+                       player.totalScore += newScore;
+                       if (newScore === 0) player.roundsWon += 1;
 
                 const wasEliminated = player.eliminated;
                 player.eliminated = player.totalScore > TARGET_SCORE;
