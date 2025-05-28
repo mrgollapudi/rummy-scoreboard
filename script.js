@@ -40,6 +40,7 @@
         let isEditing = false;
         let gameHistory = [];
         let isReadOnly = false;
+        let gameEnded = false;
         const MAX_PLAYERS = 10;
         const MAX_SHARED_GAMES = 100;
 
@@ -868,7 +869,7 @@
             }).join('')}</tr>`;
 
             // Rejoin actions (hidden in read-only mode)
-            if (!isReadOnly) {
+            if (!isReadOnly && !gameEnded) {) {
                 tableHTML += `<tr><td class="p-1"> Action </td>${players.map(player => {
                     const activePlayersCount = players.filter(p => !p.eliminated).length;
                 const scores = players.filter(p => !p.eliminated).map(p => p.totalScore);
@@ -903,6 +904,7 @@
             els.extraPlayerControls.classList.add('hidden');
             els.scoreInput.classList.add('hidden');
             els.gameOver.classList.remove('hidden');
+            gameEnded = true;
             const activePlayers = players.filter(p => !p.eliminated);
             const winnings = calculateWinnings();
             const hasDrops = activePlayers.some(p => Math.floor((TARGET_SCORE - p.totalScore) / 24) > 0);
@@ -1028,6 +1030,7 @@ function addExtraPlayer() {
             gameName = '';
             startDateTime = null;
             isEditing = false;
+            gameEnded = false;
             els.playerSetup.classList.remove('hidden');
             els.scoreInput.classList.add('hidden');
             els.gameOver.classList.add('hidden');
