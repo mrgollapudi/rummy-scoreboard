@@ -661,6 +661,11 @@
             activePlayers.forEach(player => {
                 const select = document.getElementById(`score_${player.name}`);
                 let score;
+                    // Fix: Check if select exists
+                if (!select) {
+                        errors.push(`Score input for ${getPlayerDisplayName(player)} not found.`);
+                        return;
+                }
                 if (select.value === 'entry') {
                     const entryInput = document.getElementById(`entry_${player.name}`);
                     score = parseInt(entryInput.value) || 0;
