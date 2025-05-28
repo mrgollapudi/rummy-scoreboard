@@ -1,122 +1,122 @@
-<!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Rummy Score Board</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">    
+  <meta charset="UTF-8">
+  <title>Rummy Score Board</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <div class="banner">
-        <div class="banner-content">
-            <div class="card-symbol-group">
-                <span class="card-symbols clubs">♣</span>
-                <span class="card-symbols hearts">♥</span>
-            </div>
-            <h1 class="text-2xl font-bold text-white text-center">Rummy Score Board</h1>
-            <div class="card-symbol-group">
-                <span class="card-symbols diamonds">♦</span>
-                <span class="card-symbols spades">♠</span>
-            </div>
-        </div>
+  <div class="banner">
+    <div class="banner-content">
+      <div class="card-symbol-group">
+        <span class="card-symbols clubs">♣</span>
+        <span class="card-symbols hearts">♥</span>
+      </div>
+      <h1 class="text-2xl font-bold text-white text-center">Rummy Score Board</h1>
+      <div class="card-symbol-group">
+        <span class="card-symbols diamonds">♦</span>
+        <span class="card-symbols spades">♠</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding-left: 1.5rem;" class="bg-white rounded-lg shadow-lg p-4 w-full max-w-4xl container">
+    <div id="targetDisplay" class="text-xl font-bold text-center mb-2 hidden editable">
+      Target Score: <span id="targetValue"></span>
     </div>
 
-    <div style="padding-left: 1.5rem;" class="bg-white rounded-lg shadow-lg p-4 w-full max-w-4xl container">
-        <div id="targetDisplay" class="text-xl font-bold text-center mb-2 hidden editable">
-            Target Score: <span id="targetValue"></span>
+    <!-- Player Setup -->
+    <div id="playerSetup" class="mb-4 editable">
+      <h2 class="text-xl font-semibold mb-2">Game Setup</h2>
+      <div class="flex flex-col gap-2">
+        <div class="flex flex-wrap gap-2">
+          <label for="playerName" class="sr-only">Player Names</label>
+          <input id="playerName" type="text" placeholder="Enter player names (e.g., Alice, Bob, Charlie)" class="border rounded p-2" style="width: 325px; height: 3rem;">
+          <input id="betAmount" type="number" placeholder="Bet Amt" value="10" class="border rounded p-2" style="width: 120px;">
+          <button onclick="addPlayer()" class="bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-600 font-bold no-margin-right" style="width: 66px; text-align: center;">Add Players</button>
+        </div> <label for="betAmount" class="text-sm text-gray-500">Bet Amount (default: $10)</label>
+        <div id="playerError" class="text-red-500 border-red-500 mt-1 hidden"></div>
+        <div class="flex gap-2">
+          <label for="targetScore" class="sr-only">Target Score</label>
+          <input id="targetScore" type="number" placeholder="Set Target score" min="100" class="border rounded p-2" style="width: 120px; height: 3rem;">
+          <button onclick="startGame()" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 font-bold">Start Game</button>
         </div>
-
-        <!-- Player Setup -->
-        <div id="playerSetup" class="mb-4 editable">
-            <h2 class="text-xl font-semibold mb-2">Game Setup</h2>
-            <div class="flex flex-col gap-2">
-                <div class="flex flex-wrap gap-2">
-                    <label for="playerName" class="sr-only">Player Names</label>
-                    <input id="playerName" type="text" placeholder="Enter player names (e.g., Alice, Bob, Charlie)" class="border rounded p-2" style="width: 325px; height: 3rem;">
-                    <input id="betAmount" type="number" placeholder="Bet Amt" value="10" class="border rounded p-2" style="width: 120px;">
-                    <button onclick="addPlayer()" class="bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-600 font-bold no-margin-right" style="width: 66px; text-align: center;">Add Players</button>
-                    <br><label for="betAmount" class="text-sm text-gray-500">Bet Amount (default: $10)</label>
-                </div>
-                <div id="playerError" class="text-red-500 border-red-500 mt-1 hidden"></div>
-                <div class="flex gap-2">
-                    <label for="targetScore" class="sr-only">Target Score</label>
-                    <input id="targetScore" type="number" placeholder="Set Target score" min="100" class="border rounded p-2" style="width: 120px; height: 3rem;">
-                    <button onclick="startGame()" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 font-bold">Start Game</button>
-                </div>
-                <div id="targetError" class="text-red-500 border-red-500 mt-1 hidden"></div>
-            </div>
-            <div id="playerList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-2"></div>
-        </div>
-
-        <!-- Score Input -->
-        <div id="scoreInput" class="mb-4 hidden editable">
-            <h2 class="text-xl font-semibold mb-2" id="scoreInputTitle">Enter Scores for Round <span id="roundNumber">1</span></h2>
-            <div id="scoreForm" class="flex flex-row gap-2 overflow-x-auto"></div>
-            <div id="errorMessage" class="text-red-500 border-red-500 mt-1 hidden"></div>
-            <div class="flex gap-2 mt-2" id="scoreButtons"></div>
-        </div>
-            
-        <!-- Leaderboard -->
-        <div id="leaderboard" class="mb-4">
-            <h2 class="text-xl font-semibold mb-2">Leaderboard - <span id="leaderboardGameName">Untitled</span> (Total Bet: $<span id="totalBetAmount">0.00</span>)</h2>
-            <div class="leaderboard-table">
-                <table>
-                    <thead id="leaderboardHead"></thead>
-                    <tbody id="leaderboardTable"></tbody>
-                </table>
-            </div>
-            <div id="shareLeaderboard" class="mt-2 editable">
-                <button onclick="generateShareLink()" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">Share Score Board</button>
-            </div>
-        </div>
-        <!-- ✅ New End Game Button Placement -->
-        <div class="mt-2 editable" id="manualEndButton">
-            <button onclick="endGame(true)" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 font-bold">End Game</button>
-        </div>
-         <!-- Add Extra Player -->    
-        <div class="mt-2 editable hidden" id="extraPlayerControls">
-            <input id="extraPlayerName" type="text" placeholder="New player name" class="border rounded p-2" style="width: 100px; height: 2.5rem;">
-            <button onclick="addExtraPlayer()" class="bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600">Add Extra Player</button>
-            <div id="extraPlayerError" class="text-red-500 mt-1 hidden"></div>
-        </div>
-        <!-- Game Over -->
-        <div id="gameOver" class="hidden editable">
-            <h2 class="text-xl font-semibold mb-2">Game Over!</h2>
-            <p id="winnerText" class="text-lg"></p>
-            <div id="winningsText" class="text-lg mt-1"></div>
-            <div id="gameOverButtons" class="flex gap-2 mt-2"></div>
-        </div>
-
-        <!-- Game History -->
-        <div id="gameHistory" class="mb-4">
-            <h2 class="text-xl font-semibold mb-2">Game History</h2>
-            <div class="history-table">
-                <table>
-                    <thead>
-                        <tr class="bg-gray-200">
-                            <th class="p-1">Game Name</th>
-                            <th class="p-1">Date-Time</th>
-                            <th class="p-1">Target Score</th>
-                            <th class="p-1">Result</th>
-                            <th class="p-1">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="historyTable"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="footer text-center text-sm text-gray-600 mt-4">
-          © 2025 MRGollapudi. 
-            <!-- — Last updated: <span id="commitDate">{{LAST_COMMIT_DATE}}</span> -->
-        </footer>
-
+        <div id="targetError" class="text-red-500 border-red-500 mt-1 hidden"></div>
+      </div>
+      <div id="playerList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 mt-2"></div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/xlsx.min.js"></script>
-    <!-- Load html2canvas for screenshot functionality -->
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-    <script src="script.js"></script>
+
+    <!-- Score Input -->
+    <div id="scoreInput" class="mb-4 hidden editable">
+      <h2 class="text-xl font-semibold mb-2" id="scoreInputTitle">Enter Scores for Round <span id="roundNumber">1</span></h2>
+      <div id="scoreForm" class="flex flex-row gap-2 overflow-x-auto"></div>
+      <div id="errorMessage" class="text-red-500 border-red-500 mt-1 hidden"></div>
+      <div class="flex gap-2 mt-2" id="scoreButtons"></div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div id="leaderboard" class="mb-4">
+      <h2 class="text-xl font-semibold mb-2">Leaderboard - <span id="leaderboardGameName">Untitled</span> (Total Bet: $<span id="totalBetAmount">0.00</span>)</h2>
+      <div class="leaderboard-table">
+        <table>
+          <thead id="leaderboardHead"></thead>
+          <tbody id="leaderboardTable"></tbody>
+        </table>
+      </div>
+      <div id="shareLeaderboard" class="mt-2 editable">
+        <button onclick="generateShareLink()" class="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600">Share Score Board</button>
+      </div>
+    </div>
+    <!-- ✅ New End Game Button Placement -->
+    <div class="mt-2 editable" id="manualEndButton">
+      <button onclick="endGame(true)" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 font-bold">End Game</button>
+    </div>
+    <!-- Add Extra Player -->
+    <div class="mt-2 editable hidden" id="extraPlayerControls">
+      <input id="extraPlayerName" type="text" placeholder="New player name" class="border rounded p-2" style="width: 100px; height: 2.5rem;">
+      <button onclick="addExtraPlayer()" class="bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600">Add Extra Player</button>
+      <div id="extraPlayerError" class="text-red-500 mt-1 hidden"></div>
+    </div>
+    <!-- Game Over -->
+    <div id="gameOver" class="hidden editable">
+      <h2 class="text-xl font-semibold mb-2">Game Over!</h2>
+      <p id="winnerText" class="text-lg"></p>
+      <div id="winningsText" class="text-lg mt-1"></div>
+      <div id="gameOverButtons" class="flex gap-2 mt-2"></div>
+    </div>
+
+    <!-- Game History -->
+    <div id="gameHistory" class="mb-4">
+      <h2 class="text-xl font-semibold mb-2">Game History</h2>
+      <div class="history-table">
+        <table>
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="p-1">Game</th>
+              <th class="p-1">Time</th>
+              <th class="p-1">Target</th>
+              <th class="p-1">Result</th>
+              <th class="p-1">Action</th>
+            </tr>
+          </thead>
+          <tbody id="historyTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer text-center text-sm text-gray-600 mt-4">
+      © 2025 MRGollapudi.
+      <!-- — Last updated: <span id="commitDate">{{LAST_COMMIT_DATE}}</span> -->
+    </footer>
+
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/xlsx.min.js"></script>
+  <!-- Load html2canvas for screenshot functionality -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
