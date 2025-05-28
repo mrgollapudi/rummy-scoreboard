@@ -595,8 +595,8 @@
                 ? `Edit Scores for Round <span id="roundNumber">${round - 1}</span>`
                 : `Enter Scores for Round <span id="roundNumber">${round}</span>`;
             const playersToShow = isEditing
-                    ? players.filter(p => roundScores[round - 2] && roundScores[round - 2].hasOwnProperty(p.name))
-                    : players.filter(p => !p.eliminated);
+                ? players.filter(p => roundScores[roundScores.length - 1] && roundScores[roundScores.length - 1].hasOwnProperty(p.name))
+                : players.filter(p => !p.eliminated);
 
             els.scoreForm.innerHTML = playersToShow.map(player => {
                 let selectedValue = isEditing && roundScores.length > 0 
