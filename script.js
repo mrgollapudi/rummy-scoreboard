@@ -1,4 +1,3 @@
-<script type="text/javascript">
         var gk_isXlsx = false;
         var gk_xlsxFileLookup = {};
         var gk_fileData = {};
@@ -29,8 +28,7 @@
             }
             return gk_fileData[filename] || "";
         }
-    </script>
-    <script>
+
         let players = [];
         let round = 1;
         let gameStarted = false;
@@ -1006,4 +1004,3 @@ function addExtraPlayer() {
 
         // Load game state on page load
         loadGameState();
-    </script>
