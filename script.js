@@ -720,34 +720,32 @@
             let winnerCount = 0;
 
             const playersToScore = isEditing
-            ? players.filter(p => roundScores[roundScores.length - 1]?.hasOwnProperty(p.name))
-            : players.filter(p => !p.eliminated);
+                ? players.filter(p => currentRoundScores.hasOwnProperty(p.name))
+                : players.filter(p => !p.eliminated);
+
                 
                 playersToScore.forEach(player => {
+                  const oldScore = roundScores[lastRoundIndex][player.name] || 0;
+                  const newScore = currentRoundScores[player.name] || 0;
 
-                const select = document.getElementById(`score_${player.name}`);
-                let score;
-                    // Fix: Check if select exists
-                if (!select) {
-                        errors.push(`Score input for ${getPlayerDisplayName(player)} not found.`);
-                        return;
-                }
-                if (select.value === 'entry') {
-                    const entryInput = document.getElementById(`entry_${player.name}`);
-                    score = parseInt(entryInput.value) || 0;
-                    if (score < 2 || score > 80) {
-                        errors.push(`${getPlayerDisplayName(player)}'s entry score must be 2-80.`);
-                        entryInput.classList.add('border-red-500');
-                        return;
-                    }
-                    entryInput.classList.remove('border-red-500');
-                } else {
-                    score = parseInt(select.value);
-                }
-                scores.push({ player, score });
-                currentRoundScores[player.name] = score;
-                if (score === 0) winnerCount++;
-            });
+                  // 🔄 Correct totalScore
+                  player.totalScore = player.totalScore - oldScore + newScore;
+
+                  // 🏆 Update roundsWon
+                  if (oldScore === 0) player.roundsWon -= 1;
+                  if (newScore === 0) player.roundsWon += 1;
+
+                  // ⚠️ Update elimination status
+                  const wasEliminated = player.eliminated;
+                  player.eliminated = player.totalScore > TARGET_SCORE;
+
+                  if (!wasEliminated && player.eliminated) {
+                    player.lastEliminatedRound = round - 1;
+                  } else if (wasEliminated && !player.eliminated) {
+                 player.lastEliminatedRound = null;
+                  }
+                });
+
 
             if (winnerCount !== 1) errors.push('Exactly one player must be the winner (R).');
 
