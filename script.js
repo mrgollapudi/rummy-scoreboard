@@ -665,34 +665,31 @@
 
             isEditing = true;
 
-            const lastRoundScores = roundScores[roundScores.length - 1];
+            const lastRoundScores = roundScores.pop();  // ✅ remove last round temporarily
+            round--; // also step back the round
 
             players.forEach(player => {
                 const lastScore = lastRoundScores[player.name];
 
                 if (typeof lastScore === 'number') {
-                    // Revert score and round win
                     player.totalScore -= lastScore;
                     if (lastScore === 0) {
                         player.roundsWon -= 1;
                     }
 
-                    // Revert elimination if it happened in the last round
-                    if (player.eliminated && player.lastEliminatedRound === round - 1) {
+                    // Restore if eliminated in this round
+                    if (player.eliminated && player.lastEliminatedRound === round) {
                         player.eliminated = false;
                         player.lastEliminatedRound = null;
                     }
                 }
             });
 
-            // ✅ Do NOT pop roundScores or decrement round
-            // We'll update roundScores[roundScores.length - 1] on submit
-
-            updateScoreForm();   // playersToShow will now include those who were just un-eliminated
+            // Temporarily store the removed round if you want to allow "Cancel Edit"
+            updateScoreForm();
             updateLeaderboard();
             saveGameState();
         }
-
 
         function submitScores() {
             if (isReadOnly) return;
