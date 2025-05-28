@@ -649,8 +649,8 @@
                         ${isEditing ? 'Save Changes' : 'Submit Scores'}
                     </button>
                     ${roundScores.length > 0 ? `
-                        <button onclick="editLastRound()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
-                    ${isEditing ? 'Cancel Edit' : 'Edit Last Round'}
+                        <button onclick="${isEditing ? 'cancelEditLastRound()' : 'editLastRound()'}" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+                                          ${isEditing ? 'Cancel Edit' : 'Edit Last Round'}
                         </button>
                     ` : ''}
                         `;
@@ -661,7 +661,7 @@
 
 
         function editLastRound() {
-            if (isReadOnly || roundScores.length === 0 || !els.gameOver.classList.contains('hidden')) return;
+            if (isReadOnly || roundScores.length === 0 || !els.gameOver.classList.contains('hidden') || isEditing) return;
 
             isEditing = true;
 
@@ -670,29 +670,47 @@
 
             players.forEach(player => {
                 const lastScore = lastRoundScores[player.name];
-
                 if (typeof lastScore === 'number') {
                     player.totalScore -= lastScore;
+                    if (lastScore === 0) player.roundsWon -= 1;
 
-                    if (lastScore === 0) {
-                player.roundsWon -= 1;
-                    }
-
-                    if (player.eliminated && player.lastEliminatedRound === round - 1) {
+                    if (player.eliminated && player.lastEliminatedRound === lastRoundIndex) {
                         player.eliminated = false;
                         player.lastEliminatedRound = null;
                     }
                 }
             });
 
-            // ✅ Do NOT pop or modify roundScores or round
-            // Form will overwrite roundScores[lastRoundIndex] directly
-
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
         }
+        
+        function cancelEditLastRound() {
+            if (!isEditing || roundScores.length === 0) return;
 
+            const lastRoundIndex = roundScores.length - 1;
+            const lastRoundScores = roundScores[lastRoundIndex];
+
+            players.forEach(player => {
+                const lastScore = lastRoundScores[player.name];
+                if (typeof lastScore === 'number') {
+                    player.totalScore += lastScore;
+                    if (lastScore === 0) player.roundsWon += 1;
+
+                    // Reapply elimination if they should have been eliminated
+                    if (player.totalScore > TARGET_SCORE) {
+                        player.eliminated = true;
+                        player.lastEliminatedRound = lastRoundIndex;
+                    }
+                }
+            });
+
+            isEditing = false;
+            updateScoreForm();
+            updateLeaderboard();
+            saveGameState();
+        }
 
         function submitScores() {
             if (isReadOnly) return;
