@@ -464,72 +464,72 @@
         }
 
         function addPlayer() {
-    if (isReadOnly) return;
+            if (isReadOnly) return;
 
-    const input = els.playerName.value.trim();
-    const betInput = parseFloat(els.betAmount.value) || 0;
+            const input = els.playerName.value.trim();
+            const betInput = parseFloat(els.betAmount.value) || 0;
 
-    if (!input) {
-        els.playerError.textContent = 'Player names are required.';
-        els.playerError.classList.remove('hidden');
-        return;
-    }
+            if (!input) {
+                els.playerError.textContent = 'Player names are required.';
+                els.playerError.classList.remove('hidden');
+                return;
+            }
 
-    if (betInput < 0) {
-        els.playerError.textContent = 'Bet amount must be non-negative.';
-        els.playerError.classList.remove('hidden');
-        return;
-    }
+            if (betInput < 0) {
+                els.playerError.textContent = 'Bet amount must be non-negative.';
+                els.playerError.classList.remove('hidden');
+                return;
+            }
 
-    if (players.length > 0 && betInput !== players[0].initialBetAmount) {
-        els.playerError.textContent = 'All players must have the same initial bet amount.';
-        els.playerError.classList.remove('hidden');
-        return;
-    }
+            if (players.length > 0 && betInput !== players[0].initialBetAmount) {
+                els.playerError.textContent = 'All players must have the same initial bet amount.';
+                els.playerError.classList.remove('hidden');
+                return;
+            }
 
-    // Prepare names
-    const inputNames = input.split(',').map(name => name.trim()).filter(Boolean);
-    const existingNamesLower = players.map(p => p.name.toLowerCase());
+            // Prepare names
+            const inputNames = input.split(',').map(name => name.trim()).filter(Boolean);
+            const existingNamesLower = players.map(p => p.name.toLowerCase());
 
-    const newNames = [];
-    const duplicates = [];
+            const newNames = [];
+            const duplicates = [];
 
-    inputNames.forEach(name => {
-        const formatted = formatName(name);
-        if (existingNamesLower.includes(formatted.toLowerCase()) || newNames.map(n => n.toLowerCase()).includes(formatted.toLowerCase())) {
-            duplicates.push(formatted);
-        } else {
-            newNames.push(formatted);
+            inputNames.forEach(name => {
+                const formatted = formatName(name);
+                if (existingNamesLower.includes(formatted.toLowerCase()) || newNames.map(n => n.toLowerCase()).includes(formatted.toLowerCase())) {
+                    duplicates.push(formatted);
+                } else {
+                    newNames.push(formatted);
+                }
+            });
+
+            if (duplicates.length > 0) {
+                els.playerError.textContent = `Duplicate name(s): ${duplicates.join(', ')}. Please use unique names.`;
+                els.playerError.classList.remove('hidden');
+                return;
+            }
+
+            // Add unique players
+            newNames.forEach(name => {
+                players.push({
+                    name,
+                    initialBetAmount: betInput,
+                    betAmount: betInput,
+                    totalScore: 0,
+                    roundsWon: 0,
+                    eliminated: false,
+                    rejoinCount: 0,
+                    lastEliminatedRound: null,
+                    rejoinRounds: []
+                });
+            });
+
+            els.playerName.value = '';
+            els.betAmount.value = '10';
+            els.playerError.classList.add('hidden');
+            updatePlayerList();
+            saveGameState();
         }
-    });
-
-    if (duplicates.length > 0) {
-        els.playerError.textContent = `Duplicate name(s): ${duplicates.join(', ')}. Please use unique names.`;
-        els.playerError.classList.remove('hidden');
-        return;
-    }
-
-    // Add unique players
-    newNames.forEach(name => {
-        players.push({
-            name,
-            initialBetAmount: betInput,
-            betAmount: betInput,
-            totalScore: 0,
-            roundsWon: 0,
-            eliminated: false,
-            rejoinCount: 0,
-            lastEliminatedRound: null,
-            rejoinRounds: []
-        });
-    });
-
-    els.playerName.value = '';
-    els.betAmount.value = '10';
-    els.playerError.classList.add('hidden');
-    updatePlayerList();
-    saveGameState();
-}
 
 
         function updatePlayerList() {
