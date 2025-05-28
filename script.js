@@ -869,7 +869,7 @@
             }).join('')}</tr>`;
 
             // Rejoin actions (hidden in read-only mode)
-            if (!isReadOnly && !gameEnded) {) {
+            if (!isReadOnly && !gameEnded) {
                 tableHTML += `<tr><td class="p-1"> Action </td>${players.map(player => {
                     const activePlayersCount = players.filter(p => !p.eliminated).length;
                 const scores = players.filter(p => !p.eliminated).map(p => p.totalScore);
