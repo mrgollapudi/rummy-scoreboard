@@ -964,6 +964,7 @@
             els.scoreInput.classList.remove('hidden');
             els.gameOver.classList.add('hidden');
             isEditing = false;
+            gameEnded = false;
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
