@@ -701,8 +701,12 @@
             const currentRoundScores = {};
             let winnerCount = 0;
 
-            const activePlayers = players.filter(p => !p.eliminated);
-            activePlayers.forEach(player => {
+            const playersToScore = isEditing
+            ? players.filter(p => roundScores[roundScores.length - 1]?.hasOwnProperty(p.name))
+            : players.filter(p => !p.eliminated);
+                
+                playersToScore.forEach(player => {
+
                 const select = document.getElementById(`score_${player.name}`);
                 let score;
                     // Fix: Check if select exists
