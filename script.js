@@ -665,31 +665,34 @@
 
             isEditing = true;
 
-            const lastRoundScores = roundScores.pop();  // ✅ remove last round temporarily
-            round--; // also step back the round
+            const lastRoundIndex = roundScores.length - 1;
+            const lastRoundScores = roundScores[lastRoundIndex];
 
             players.forEach(player => {
                 const lastScore = lastRoundScores[player.name];
 
                 if (typeof lastScore === 'number') {
                     player.totalScore -= lastScore;
+
                     if (lastScore === 0) {
-                        player.roundsWon -= 1;
+                player.roundsWon -= 1;
                     }
 
-                    // Restore if eliminated in this round
-                    if (player.eliminated && player.lastEliminatedRound === round) {
+                    if (player.eliminated && player.lastEliminatedRound === round - 1) {
                         player.eliminated = false;
                         player.lastEliminatedRound = null;
                     }
                 }
             });
 
-            // Temporarily store the removed round if you want to allow "Cancel Edit"
+            // ✅ Do NOT pop or modify roundScores or round
+            // Form will overwrite roundScores[lastRoundIndex] directly
+
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
         }
+
 
         function submitScores() {
             if (isReadOnly) return;
@@ -734,24 +737,34 @@
             els.errorMessage.classList.add('hidden');
 
             if (isEditing) {
-                const lastRoundScores = roundScores[roundScores.length - 1];
-                players.forEach(player => {
-                    const oldScore = lastRoundScores[player.name] || 0;
-                    const newScore = currentRoundScores[player.name] || 0;
-                    player.totalScore = player.totalScore - oldScore + newScore;
-                    if (oldScore === 0) player.roundsWon -= 1;
-                    if (newScore === 0) player.roundsWon += 1;
-                    const wasEliminated = player.eliminated;
-                    player.eliminated = player.totalScore > TARGET_SCORE;
-                    if (!wasEliminated && player.eliminated) {
-                        player.lastEliminatedRound = round - 1;
-                    } else if (wasEliminated && !player.eliminated) {
-                        player.lastEliminatedRound = null;
-                    }
-                });
-                roundScores[roundScores.length - 1] = currentRoundScores;
-                isEditing = false;
-            } else {
+               const lastRoundIndex = roundScores.length - 1;
+               const lastRoundScores = roundScores[lastRoundIndex];
+
+               players.forEach(player => {
+                const oldScore = lastRoundScores[player.name] || 0;
+                const newScore = currentRoundScores[player.name] || 0;
+
+                player.totalScore = player.totalScore - oldScore + newScore;
+
+                if (oldScore === 0) player.roundsWon -= 1;
+                if (newScore === 0) player.roundsWon += 1;
+
+                const wasEliminated = player.eliminated;
+                player.eliminated = player.totalScore > TARGET_SCORE;
+
+                if (!wasEliminated && player.eliminated) {
+                    player.lastEliminatedRound = round - 1;
+                } else if (wasEliminated && !player.eliminated) {
+                    player.lastEliminatedRound = null;
+                }
+            });
+
+            // ✅ This line updates the last round — not adds a new one
+            roundScores[lastRoundIndex] = currentRoundScores;
+
+            isEditing = false;
+        }
+         else {
                 roundScores.push(currentRoundScores);
                 round++;
                 scores.forEach(({ player, score }) => {
