@@ -590,14 +590,18 @@
 
         function updateScoreForm() {
             if (isReadOnly) return;
+
             const isGameOver = !els.gameOver.classList.contains('hidden');
+
             els.scoreInputTitle.innerHTML = isEditing 
                 ? `Edit Scores for Round <span id="roundNumber">${round - 1}</span>`
                 : `Enter Scores for Round <span id="roundNumber">${round}</span>`;
+
             const playersToShow = isEditing
                 ? players.filter(p => roundScores[roundScores.length - 1] && roundScores[roundScores.length - 1].hasOwnProperty(p.name))
                 : players.filter(p => !p.eliminated);
 
+            // Generate HTML for score inputs
             els.scoreForm.innerHTML = playersToShow.map(player => {
                 let selectedValue = isEditing && roundScores.length > 0 
                     ? roundScores[roundScores.length - 1][player.name] 
@@ -609,20 +613,22 @@
                     <label for="score_${player.name}" class="font-medium text-sm" title="${getPlayerDisplayName(player)}">
                       ${getPlayerDisplayName(player)}
                     </label>
-            <select id="score_${player.name}" class="border rounded p-1 text-sm">
-              <option value="0" ${selectedValue === 0 ? 'selected' : ''}>R (0)</option>
-              <option value="24" ${selectedValue === 24 ? 'selected' : ''}>D (24)</option>
-              <option value="40" ${selectedValue === 40 ? 'selected' : ''}>MD (40)</option>
-              <option value="80" ${selectedValue === 80 ? 'selected' : ''}>FC (80)</option>
-              <option value="entry" ${isEntry ? 'selected' : ''}>Input:</option>
-            </select>
-            <label for="entry_${player.name}" class="sr-only">Custom Score for ${getPlayerDisplayName(player)}</label>
-            <input id="entry_${player.name}" type="number" placeholder="2-80" value="${isEntry ? selectedValue : ''}"
-              class="border rounded p-1 text-sm w-10 ${isEntry ? '' : 'hidden'}"
-              min="2" max="80">
-          </div>
-        `;
+                    <select id="score_${player.name}" class="border rounded p-1 text-sm">
+                      <option value="0" ${selectedValue === 0 ? 'selected' : ''}>R (0)</option>
+                      <option value="24" ${selectedValue === 24 ? 'selected' : ''}>D (24)</option>
+                      <option value="40" ${selectedValue === 40 ? 'selected' : ''}>MD (40)</option>
+                      <option value="80" ${selectedValue === 80 ? 'selected' : ''}>FC (80)</option>
+                      <option value="entry" ${isEntry ? 'selected' : ''}>Input:</option>
+                    </select>
+                    <label for="entry_${player.name}" class="sr-only">Custom Score for ${getPlayerDisplayName(player)}</label>
+                    <input id="entry_${player.name}" type="number" placeholder="2-80" value="${isEntry ? selectedValue : ''}"
+                      class="border rounded p-1 text-sm w-10 ${isEntry ? '' : 'hidden'}"
+                      min="2" max="80">
+                  </div>
+                `;
+            }).join('');
 
+            // ✅ Now add event listeners after the DOM elements exist
             playersToShow.forEach(player => {
                 const select = document.getElementById(`score_${player.name}`);
                 const entryInput = document.getElementById(`entry_${player.name}`);
@@ -634,18 +640,25 @@
                 }
             });
 
+            // Show/hide buttons
             if (isGameOver) {
                 els.scoreButtons.innerHTML = '';
             } else {
                 els.scoreButtons.innerHTML = `
-                    <button onclick="submitScores()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">${isEditing ? 'Save Changes' : 'Submit Scores'}</button>
+                    <button onclick="submitScores()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        ${isEditing ? 'Save Changes' : 'Submit Scores'}
+                    </button>
                     ${roundScores.length > 0 ? `
-                        <button onclick="editLastRound()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">${isEditing ? 'Cancel Edit' : 'Edit Last Round'}</button>
+                        <button onclick="editLastRound()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+                    ${isEditing ? 'Cancel Edit' : 'Edit Last Round'}
+                        </button>
                     ` : ''}
-                `;
-            }
+                        `;
+                    }
+
             els.errorMessage.classList.add('hidden');
         }
+
 
         function editLastRound() {
             if (isReadOnly || roundScores.length === 0 || !els.gameOver.classList.contains('hidden')) return;
