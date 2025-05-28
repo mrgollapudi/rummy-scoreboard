@@ -1030,7 +1030,7 @@ function addExtraPlayer() {
             gameName = '';
             startDateTime = null;
             isEditing = false;
-            gameEnded = false;
+            //gameEnded = false;
             els.playerSetup.classList.remove('hidden');
             els.scoreInput.classList.add('hidden');
             els.gameOver.classList.add('hidden');
