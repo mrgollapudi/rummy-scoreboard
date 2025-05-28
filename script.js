@@ -1020,6 +1020,7 @@ function addExtraPlayer() {
             if (isReadOnly) return;
             if (gameStarted) {
                 saveGameHistory();
+                    gameEnded = false;
             }
             players = [];
             round = 1;
@@ -1030,7 +1031,6 @@ function addExtraPlayer() {
             gameName = '';
             startDateTime = null;
             isEditing = false;
-            //gameEnded = false;
             els.playerSetup.classList.remove('hidden');
             els.scoreInput.classList.add('hidden');
             els.gameOver.classList.add('hidden');
