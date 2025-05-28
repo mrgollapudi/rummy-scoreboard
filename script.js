@@ -628,12 +628,12 @@
                     <button onclick="submitScores()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                         ${isEditing ? 'Save Changes' : 'Submit Scores'}
                     </button>
-                    ${roundScores.length > 0 ? `
+                    ${(!isEditing && roundScores.length > 0) ? `
                         <button onclick="editLastRound()" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
-                    ${isEditing ? 'Cancel Edit' : 'Edit Last Round'}
+                            Edit Last Round
                         </button>
                     ` : ''}
-                        `;
+                `;
                     }
 
             els.errorMessage.classList.add('hidden');
