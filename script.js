@@ -739,11 +739,13 @@ const canAnyoneRejoin = players.some(p =>
 );
 
 if (activePlayersAfter.length <= 1) {
+    updateLeaderboard();     // <--- Add this to ensure display is up to date
+    updateGameHistory();     // <--- Add this if you want history instantly updated
     endGame();
-}
- else {
+} else {
     updateScoreForm();
     updateLeaderboard();
+    updateGameHistory();
 }
 
             saveGameState();
