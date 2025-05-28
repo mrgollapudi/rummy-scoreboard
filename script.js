@@ -731,23 +731,22 @@
             }
 
           const activePlayersAfter = players.filter(p => !p.eliminated);
-const canAnyoneRejoin = players.some(p => 
-    p.eliminated && 
-    p.lastEliminatedRound !== null && 
-    round === p.lastEliminatedRound + 1 &&
-    Math.max(...players.filter(p => !p.eliminated).map(p => p.totalScore)) <= REJOIN_THRESHOLD
-);
+        const canAnyoneRejoin = players.some(p => 
+            p.eliminated && 
+            p.lastEliminatedRound !== null && 
+            round === p.lastEliminatedRound + 1 &&
+            Math.max(...players.filter(p => !p.eliminated).map(p => p.totalScore)) <= REJOIN_THRESHOLD
+        );
 
-if (activePlayersAfter.length <= 1) {
-    updateLeaderboard();     // <--- Add this to ensure display is up to date
-    updateGameHistory();     // <--- Add this if you want history instantly updated
-    endGame();
-} else {
-    updateScoreForm();
-    updateLeaderboard();
-    updateGameHistory();
-}
-
+            if (activePlayersAfter.length <= 1) {
+                updateLeaderboard();
+                updateGameHistory();
+                endGame();
+            } else {
+                updateScoreForm();
+                updateLeaderboard();
+                updateGameHistory();
+            }
             saveGameState();
         }
 
