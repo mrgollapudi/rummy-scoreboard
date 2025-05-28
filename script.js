@@ -666,32 +666,10 @@
             // Begin editing
             isEditing = true;
 
-            // Get and remove the last round
-            const lastRoundScores = roundScores[roundScores.length - 1];
-
-            // Revert last round's effect from all players
-                players.forEach(player => {
-                const lastScore = lastRoundScores[player.name] || 0;
-                player.totalScore -= lastScore;
-
-                if (lastScore === 0) {
-                    player.roundsWon -= 1;
-                }
-
-        // Revert elimination if it happened in last round
-        if (player.eliminated && player.lastEliminatedRound === round - 1) {
-            player.eliminated = false;
-            player.lastEliminatedRound = null;
+           updateScoreForm();
+           updateLeaderboard();
+           saveGameState();
         }
-    });
-
-    // ✅ Keep the last round in roundScores — we’ll update it on save
-    // Do NOT: round--; or roundScores.pop()
-
-    updateScoreForm();
-    updateLeaderboard();
-    saveGameState();
-}
 
         function submitScores() {
             if (isReadOnly) return;
