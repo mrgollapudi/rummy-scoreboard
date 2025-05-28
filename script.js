@@ -662,8 +662,32 @@
 
         function editLastRound() {
             if (isReadOnly || roundScores.length === 0 || !els.gameOver.classList.contains('hidden')) return;
-            isEditing = !isEditing;
+
+            // Begin editing
+            isEditing = true;
+
+            // Get and remove the last round
+            const lastRoundScores = roundScores.pop();
+            round--;
+
+            players.forEach(player => {
+                const lastScore = lastRoundScores[player.name] || 0;
+                player.totalScore -= lastScore;
+
+                // Revert winner count
+                if (lastScore === 0) {
+                    player.roundsWon -= 1;
+                }
+
+                // Revert elimination status if they were eliminated in that round
+                if (player.eliminated && player.lastEliminatedRound === round) {
+                    player.eliminated = false;
+                    player.lastEliminatedRound = null;
+                }
+            });
+
             updateScoreForm();
+            updateLeaderboard();
             saveGameState();
         }
 
