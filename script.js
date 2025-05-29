@@ -1,16 +1,24 @@
         var gk_isXlsx = false;
         var gk_xlsxFileLookup = {};
         var gk_fileData = {};
+
         function filledCell(cell) {
             return cell !== '' && cell != null;
         }
+
         function loadFileData(filename) {
             if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
                 try {
-                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                    var workbook = XLSX.read(gk_fileData[filename], {
+                        type: 'base64'
+                    });
                     var firstSheetName = workbook.SheetNames[0];
                     var worksheet = workbook.Sheets[firstSheetName];
-                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                    var jsonData = XLSX.utils.sheet_to_json(worksheet, {
+                        header: 1,
+                        blankrows: false,
+                        defval: ''
+                    });
                     var filteredData = jsonData.filter(row => row.some(filledCell));
                     var headerRowIndex = filteredData.findIndex((row, index) =>
                         row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
@@ -72,7 +80,7 @@
             historyTable: document.getElementById('historyTable'),
             gameOverButtons: document.getElementById('gameOverButtons')
         };
-  
+
         function formatName(name) {
             return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
         }
@@ -101,7 +109,7 @@
             });
 
             // Check if any active players have drops
-            const hasDrops = activePlayers.some(player => 
+            const hasDrops = activePlayers.some(player =>
                 Math.floor((TARGET_SCORE - player.totalScore) / 24) > 0
             );
 
@@ -176,7 +184,7 @@
             return id;
         }
 
-       function generateShareLink() {
+        function generateShareLink() {
             const leaderboardElement = document.getElementById('leaderboard');
             if (!leaderboardElement) {
                 alert('Leaderboard not found.');
@@ -310,57 +318,59 @@
         }
 
         function saveGameHistory() {
-    if (isReadOnly) return;
+            if (isReadOnly) return;
 
-    const existingHistory = JSON.parse(sessionStorage.getItem('rummyGameHistory') || '[]');
-    
-    // Remove existing entry with same startDateTime (if any)
-    const filteredHistory = existingHistory.filter(g => g.startDateTime !== startDateTime);
+            const existingHistory = JSON.parse(sessionStorage.getItem('rummyGameHistory') || '[]');
 
-    const activePlayers = players.filter(p => !p.eliminated);
-    const winnings = calculateWinnings();
-    let result = winnings
-        ? winnings.filter(w => w.winnings !== 0).map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join(', ')
-        : 'NO Winnings, not even 40% of the players eliminated';
+            // Remove existing entry with same startDateTime (if any)
+            const filteredHistory = existingHistory.filter(g => g.startDateTime !== startDateTime);
 
-    if (els.winnerText.textContent.includes('manually')) {
-        result = `Manual End: ${result}`;
-    } else if (!activePlayers.some(p => Math.floor((TARGET_SCORE - p.totalScore) / 24) > 0)) {
-        result = `No Drops: ${result}`;
-    }
+            const activePlayers = players.filter(p => !p.eliminated);
+            const winnings = calculateWinnings();
+            let result = winnings ?
+                winnings.filter(w => w.winnings !== 0).map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join(', ') :
+                'NO Winnings, not even 40% of the players eliminated';
 
-    const gameData = {
-        gameName: gameName || 'Untitled',
-        startDateTime: startDateTime || new Date().toISOString(),
-        targetScore: TARGET_SCORE || 100,
-        totalBetAmount: calculateTotalBetAmount(),
-        players: players.map(p => ({
-            name: p.name,
-            initialBetAmount: p.initialBetAmount,
-            betAmount: p.betAmount,
-            totalScore: p.totalScore,
-            roundsWon: p.roundsWon,
-            eliminated: p.eliminated,
-            rejoinCount: p.rejoinCount,
-            lastEliminatedRound: p.lastEliminatedRound,
-            rejoinRounds: p.rejoinRounds
-        })),
-        roundScores: roundScores.map(round => ({ ...round })),
-        result
-    };
+            if (els.winnerText.textContent.includes('manually')) {
+                result = `Manual End: ${result}`;
+            } else if (!activePlayers.some(p => Math.floor((TARGET_SCORE - p.totalScore) / 24) > 0)) {
+                result = `No Drops: ${result}`;
+            }
 
-    // Push the new, unique entry
-    filteredHistory.push(gameData);
-    sessionStorage.setItem('rummyGameHistory', JSON.stringify(filteredHistory));
-    updateGameHistory();
-}
+            const gameData = {
+                gameName: gameName || 'Untitled',
+                startDateTime: startDateTime || new Date().toISOString(),
+                targetScore: TARGET_SCORE || 100,
+                totalBetAmount: calculateTotalBetAmount(),
+                players: players.map(p => ({
+                    name: p.name,
+                    initialBetAmount: p.initialBetAmount,
+                    betAmount: p.betAmount,
+                    totalScore: p.totalScore,
+                    roundsWon: p.roundsWon,
+                    eliminated: p.eliminated,
+                    rejoinCount: p.rejoinCount,
+                    lastEliminatedRound: p.lastEliminatedRound,
+                    rejoinRounds: p.rejoinRounds
+                })),
+                roundScores: roundScores.map(round => ({
+                    ...round
+                })),
+                result
+            };
+
+            // Push the new, unique entry
+            filteredHistory.push(gameData);
+            sessionStorage.setItem('rummyGameHistory', JSON.stringify(filteredHistory));
+            updateGameHistory();
+        }
 
 
         function updateGameHistory() {
             gameHistory = JSON.parse(sessionStorage.getItem('rummyGameHistory') || '[]');
-            els.historyTable.innerHTML = gameHistory.length === 0
-                ? '<tr><td colspan="5" class="text-gray-600">No games found.</td></tr>'
-                : gameHistory.map((game) => `
+            els.historyTable.innerHTML = gameHistory.length === 0 ?
+                '<tr><td colspan="5" class="text-gray-600">No games found.</td></tr>' :
+                gameHistory.map((game) => `
                     <tr>
                         <td class="p-1">${game.gameName}</td>
                         <td class="p-1">${new Date(game.startDateTime).toLocaleString()}</td>
@@ -574,19 +584,19 @@
 
             const isGameOver = !els.gameOver.classList.contains('hidden');
 
-            els.scoreInputTitle.innerHTML = isEditing 
-                ? `Edit Scores for Round <span id="roundNumber">${round - 1}</span>`
-                : `Enter Scores for Round <span id="roundNumber">${round}</span>`;
+            els.scoreInputTitle.innerHTML = isEditing ?
+                `Edit Scores for Round <span id="roundNumber">${round - 1}</span>` :
+                `Enter Scores for Round <span id="roundNumber">${round}</span>`;
 
-            const playersToShow = isEditing
-                ? players.filter(p => roundScores[roundScores.length - 1] && roundScores[roundScores.length - 1].hasOwnProperty(p.name))
-                : players.filter(p => !p.eliminated);
+            const playersToShow = isEditing ?
+                players.filter(p => roundScores[roundScores.length - 1] && roundScores[roundScores.length - 1].hasOwnProperty(p.name)) :
+                players.filter(p => !p.eliminated);
 
             // Generate HTML for score inputs
             els.scoreForm.innerHTML = playersToShow.map(player => {
-                let selectedValue = isEditing && roundScores.length > 0 
-                    ? roundScores[roundScores.length - 1][player.name] 
-                    : 24;
+                let selectedValue = isEditing && roundScores.length > 0 ?
+                    roundScores[roundScores.length - 1][player.name] :
+                    24;
                 let isEntry = isEditing && ![0, 24, 40, 80].includes(selectedValue);
                 if (isEntry && selectedValue === undefined) selectedValue = '';
                 return `
@@ -635,7 +645,7 @@
                         </button>
                     ` : ''}
                 `;
-                    }
+            }
 
             els.errorMessage.classList.add('hidden');
         }
@@ -656,7 +666,7 @@
                     player.totalScore -= lastScore;
 
                     if (lastScore === 0) {
-                player.roundsWon -= 1;
+                        player.roundsWon -= 1;
                     }
 
                     if (player.eliminated && player.lastEliminatedRound === round - 1) {
@@ -682,18 +692,18 @@
             const currentRoundScores = {};
             let winnerCount = 0;
 
-            const playersToScore = isEditing
-            ? players.filter(p => roundScores[roundScores.length - 1]?.hasOwnProperty(p.name))
-            : players.filter(p => !p.eliminated);
-                
-                playersToScore.forEach(player => {
+            const playersToScore = isEditing ?
+                players.filter(p => roundScores[roundScores.length - 1]?.hasOwnProperty(p.name)) :
+                players.filter(p => !p.eliminated);
+
+            playersToScore.forEach(player => {
 
                 const select = document.getElementById(`score_${player.name}`);
                 let score;
-                    // Fix: Check if select exists
+                // Fix: Check if select exists
                 if (!select) {
-                        errors.push(`Score input for ${getPlayerDisplayName(player)} not found.`);
-                        return;
+                    errors.push(`Score input for ${getPlayerDisplayName(player)} not found.`);
+                    return;
                 }
                 if (select.value === 'entry') {
                     const entryInput = document.getElementById(`entry_${player.name}`);
@@ -707,7 +717,10 @@
                 } else {
                     score = parseInt(select.value);
                 }
-                scores.push({ player, score });
+                scores.push({
+                    player,
+                    score
+                });
                 currentRoundScores[player.name] = score;
                 if (score === 0) winnerCount++;
             });
@@ -722,34 +735,36 @@
             els.errorMessage.classList.add('hidden');
 
             if (isEditing) {
-               const lastRoundIndex = roundScores.length - 1;
-               const lastRoundScores = roundScores[lastRoundIndex];
+                const lastRoundIndex = roundScores.length - 1;
+                const lastRoundScores = roundScores[lastRoundIndex];
 
-               players.forEach(player => {
-                       const newScore = currentRoundScores[player.name] || 0;
-                       //oldScore was already subtracted in editLastRound
-                       player.totalScore += newScore;
-                       if (newScore === 0) player.roundsWon += 1;
+                players.forEach(player => {
+                    const newScore = currentRoundScores[player.name] || 0;
+                    //oldScore was already subtracted in editLastRound
+                    player.totalScore += newScore;
+                    if (newScore === 0) player.roundsWon += 1;
 
-                const wasEliminated = player.eliminated;
-                player.eliminated = player.totalScore > TARGET_SCORE;
+                    const wasEliminated = player.eliminated;
+                    player.eliminated = player.totalScore > TARGET_SCORE;
 
-                if (!wasEliminated && player.eliminated) {
-                    player.lastEliminatedRound = round - 1;
-                } else if (wasEliminated && !player.eliminated) {
-                    player.lastEliminatedRound = null;
-                }
-            });
+                    if (!wasEliminated && player.eliminated) {
+                        player.lastEliminatedRound = round - 1;
+                    } else if (wasEliminated && !player.eliminated) {
+                        player.lastEliminatedRound = null;
+                    }
+                });
 
-            // ✅ This line updates the last round — not adds a new one
-            roundScores[lastRoundIndex] = currentRoundScores;
+                // ✅ This line updates the last round — not adds a new one
+                roundScores[lastRoundIndex] = currentRoundScores;
 
-            isEditing = false;
-        }
-         else {
+                isEditing = false;
+            } else {
                 roundScores.push(currentRoundScores);
                 round++;
-                scores.forEach(({ player, score }) => {
+                scores.forEach(({
+                    player,
+                    score
+                }) => {
                     player.totalScore += score;
                     if (score === 0) player.roundsWon += 1;
                     const wasEliminated = player.eliminated;
@@ -762,13 +777,13 @@
                 });
             }
 
-          const activePlayersAfter = players.filter(p => !p.eliminated);
-        const canAnyoneRejoin = players.some(p => 
-            p.eliminated && 
-            p.lastEliminatedRound !== null && 
-            round === p.lastEliminatedRound + 1 &&
-            Math.max(...players.filter(p => !p.eliminated).map(p => p.totalScore)) <= REJOIN_THRESHOLD
-        );
+            const activePlayersAfter = players.filter(p => !p.eliminated);
+            const canAnyoneRejoin = players.some(p =>
+                p.eliminated &&
+                p.lastEliminatedRound !== null &&
+                round === p.lastEliminatedRound + 1 &&
+                Math.max(...players.filter(p => !p.eliminated).map(p => p.totalScore)) <= REJOIN_THRESHOLD
+            );
 
             if (activePlayersAfter.length <= 1) {
                 updateLeaderboard();
@@ -885,16 +900,16 @@
 
             els.leaderboardTable.innerHTML = tableHTML;
             // ✅ Hide End Game button if there is only one player left
-        const activePlayers = players.filter(p => !p.eliminated);
-        const manualEndBtn = document.getElementById('manualEndButton');
+            const activePlayers = players.filter(p => !p.eliminated);
+            const manualEndBtn = document.getElementById('manualEndButton');
 
-        if (manualEndBtn) {
-            if (activePlayers.length <= 1) {
-            manualEndBtn.classList.add('hidden');
-            } else {
-        manualEndBtn.classList.remove('hidden');
-    }
-}
+            if (manualEndBtn) {
+                if (activePlayers.length <= 1) {
+                    manualEndBtn.classList.add('hidden');
+                } else {
+                    manualEndBtn.classList.remove('hidden');
+                }
+            }
 
         }
 
@@ -917,44 +932,44 @@
                         drops: Math.round(Math.floor((TARGET_SCORE - player.totalScore) / 24))
                     }))
                     .sort((a, b) => a.name.localeCompare(b.name));
-                els.winnerText.textContent = dropsLeft.length > 0 
-                    ? `Game ended manually. Drops: ${dropsLeft.map(p => `${p.name}: ${p.drops}`).join(', ')}`
-                    : 'Game ended manually. No active players.';
-                els.winningsText.innerHTML = winnings && winnings.length > 0 
-                    ? `Potential Winnings:<br>${winnings.map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join('<br>')}`
-                    : 'No Winnings, not even 40% of the players eliminated.';
+                els.winnerText.textContent = dropsLeft.length > 0 ?
+                    `Game ended manually. Drops: ${dropsLeft.map(p => `${p.name}: ${p.drops}`).join(', ')}` :
+                    'Game ended manually. No active players.';
+                els.winningsText.innerHTML = winnings && winnings.length > 0 ?
+                    `Potential Winnings:<br>${winnings.map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join('<br>')}` :
+                    'No Winnings, not even 40% of the players eliminated.';
                 els.gameOverButtons.innerHTML = `
                     <button onclick="resumeGame()" class="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600">Resume Game</button>
                     <button onclick="resetGame()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">New Game</button>
                 `;
             } else if (activePlayers.length === 1) {
                 els.winnerText.textContent = `Winner: ${getPlayerDisplayName(activePlayers[0])} with ${activePlayers[0].totalScore} points!`;
-                els.winningsText.innerHTML = winnings && winnings.length > 0 
-                    ? `Winnings:<br>${winnings.map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join('<br>')}`
-                    : 'No Winnings, not even 40% of the players eliminated.';
+                els.winningsText.innerHTML = winnings && winnings.length > 0 ?
+                    `Winnings:<br>${winnings.map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join('<br>')}` :
+                    'No Winnings, not even 40% of the players eliminated.';
                 els.gameOverButtons.innerHTML = `
                     <button onclick="resetGame()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">New Game</button>
                 `;
             } else if (!hasDrops) {
                 els.winnerText.textContent = 'Game ended with no drops remaining.';
-                els.winningsText.innerHTML = winnings && winnings.length > 0 
-                    ? `Winnings (Equal Split):<br>${winnings.map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join('<br>')}`
-                    : 'No winnings calculated.';
+                els.winningsText.innerHTML = winnings && winnings.length > 0 ?
+                    `Winnings (Equal Split):<br>${winnings.map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join('<br>')}` :
+                    'No winnings calculated.';
                 els.gameOverButtons.innerHTML = `
                     <button onclick="resumeGame()" class="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600">Resume Game</button>
                     <button onclick="resetGame()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">New Game</button>
                 `;
             } else {
                 els.winnerText.textContent = 'Game ended with no clear winner.';
-                els.winningsText.innerHTML = winnings && winnings.length > 0 
-                    ? `Potential Winnings:<br>${winnings.map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join('<br>')}`
-                    : 'No Winnings, not even 40% of the players eliminated.';
+                els.winningsText.innerHTML = winnings && winnings.length > 0 ?
+                    `Potential Winnings:<br>${winnings.map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join('<br>')}` :
+                    'No Winnings, not even 40% of the players eliminated.';
                 els.gameOverButtons.innerHTML = `
                     <button onclick="resumeGame()" class="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600">Resume Game</button>
                     <button onclick="resetGame()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">New Game</button>
                 `;
             }
-            
+
             saveGameState();
             saveGameHistory();
         }
@@ -969,59 +984,60 @@
             updateLeaderboard();
             saveGameState();
         }
-function addExtraPlayer() {
-    if (!gameStarted || isReadOnly) return;
 
-    const nameInput = document.getElementById('extraPlayerName');
-    const errorBox = document.getElementById('extraPlayerError');
-    const name = formatName(nameInput.value.trim());
-    
-    if (!name) {
-        errorBox.textContent = 'Player name is required.';
-        errorBox.classList.remove('hidden');
-        return;
-    }
+        function addExtraPlayer() {
+            if (!gameStarted || isReadOnly) return;
 
-    if (players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
-        errorBox.textContent = 'Player name must be unique.';
-        errorBox.classList.remove('hidden');
-        return;
-    }
+            const nameInput = document.getElementById('extraPlayerName');
+            const errorBox = document.getElementById('extraPlayerError');
+            const name = formatName(nameInput.value.trim());
 
-    const initialBet = players.length > 0 ? players[0].initialBetAmount : 0;
-    const highestScore = Math.max(...players.map(p => p.totalScore));
+            if (!name) {
+                errorBox.textContent = 'Player name is required.';
+                errorBox.classList.remove('hidden');
+                return;
+            }
 
-    const newPlayer = {
-        name,
-        initialBetAmount: initialBet,
-        betAmount: initialBet,
-        totalScore: highestScore,
-        roundsWon: 0,
-        eliminated: false,
-        rejoinCount: 0,
-        lastEliminatedRound: null,
-        rejoinRounds: []
-    };
+            if (players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
+                errorBox.textContent = 'Player name must be unique.';
+                errorBox.classList.remove('hidden');
+                return;
+            }
 
-    // Fill previous rounds with '-' for this player
-    roundScores.forEach(round => {
-        round[name] = '-';
-    });
+            const initialBet = players.length > 0 ? players[0].initialBetAmount : 0;
+            const highestScore = Math.max(...players.map(p => p.totalScore));
 
-    players.push(newPlayer);
-    nameInput.value = '';
-    errorBox.classList.add('hidden');
+            const newPlayer = {
+                name,
+                initialBetAmount: initialBet,
+                betAmount: initialBet,
+                totalScore: highestScore,
+                roundsWon: 0,
+                eliminated: false,
+                rejoinCount: 0,
+                lastEliminatedRound: null,
+                rejoinRounds: []
+            };
 
-    updateScoreForm();
-    updateLeaderboard();
-    saveGameState();
-}
+            // Fill previous rounds with '-' for this player
+            roundScores.forEach(round => {
+                round[name] = '-';
+            });
+
+            players.push(newPlayer);
+            nameInput.value = '';
+            errorBox.classList.add('hidden');
+
+            updateScoreForm();
+            updateLeaderboard();
+            saveGameState();
+        }
 
         function resetGame() {
             if (isReadOnly) return;
             if (gameStarted) {
                 saveGameHistory();
-                    gameEnded = false;
+                gameEnded = false;
             }
             players = [];
             round = 1;
@@ -1039,7 +1055,7 @@ function addExtraPlayer() {
             els.targetScore.value = '';
             els.targetDisplay.classList.add('hidden');
             els.playerError.classList.add('hidden');
-             // ✅ Hide Add Extra Player controls
+            // ✅ Hide Add Extra Player controls
             els.extraPlayerControls.classList.add('hidden');
             updatePlayerList();
             updateLeaderboard();
