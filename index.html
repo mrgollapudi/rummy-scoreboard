@@ -7,6 +7,7 @@
   <title>Rummy Score Board</title>
   <link rel="icon" type="image/png" href="king-of-diamonds.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -33,17 +34,22 @@
     <!-- Player Setup -->
     <div id="playerSetup" class="mb-4 editable">
       <h2 class="text-xl font-semibold mb-2">Game Setup</h2>
-      <div class="flex flex-col gap-2">
+      <!-- <div class="flex flex-col gap-2"> -->
+      <div class="d-flex flex-column gap-2">
         <div class="flex flex-wrap gap-2">
           <label for="playerName" class="sr-only">Player Names</label>
-          <input id="playerName" type="text" placeholder="Enter player names (e.g., Alice, Bob, Charlie)" class="border rounded p-2" style="width: 325px; height: 3rem;">
-          <input id="betAmount" type="number" placeholder="Bet Amt" value="10" class="border rounded p-2" style="width: 120px;">
-          <button onclick="addPlayer()" class="bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-600 font-bold no-margin-right" style="width: 66px; text-align: center;">Add Players</button>
+          <!-- <input id="playerName" type="text" placeholder="Enter player names (e.g., Alice, Bob, Charlie)" class="border rounded p-2" style="width: 325px; height: 3rem;"> 
+          <input id="betAmount" type="number" placeholder="Bet Amt" value="10" class="border rounded p-2" style="width: 120px;"> -->
+          <input id="playerName" type="text" placeholder="Enter player names (e.g., Alice, Bob, Charlie)" class="form-control" style="width: 325px; height: 3rem;">
+          <input id="betAmount" type="number" placeholder="Bet Amt" value="10" class="form-control" style="width: 120px;">
+          <!-- <button onclick="addPlayer()" class="bg-blue-500 text-white px-2 py-2 rounded hover:bg-blue-600 font-bold no-margin-right" style="width: 66px; text-align: center;">Add Players</button> -->
+          <button class="btn btn-primary">Add Players</button>
         </div> <label for="betAmount" class="text-sm text-gray-500">Bet Amount (default: $10)</label>
         <div id="playerError" class="text-red-500 border-red-500 mt-1 hidden"></div>
         <div class="flex gap-2">
           <label for="targetScore" class="sr-only">Target Score</label>
-          <input id="targetScore" type="number" placeholder="Set Target score" min="100" class="border rounded p-2" style="width: 120px; height: 3rem;">
+          <!-- <input id="targetScore" type="number" placeholder="Set Target score" min="100" class="border rounded p-2" style="width: 120px; height: 3rem;"> -->
+          <input id="targetScore" type="number" placeholder="Set Target score" min="100" class="form-control" style="width: 120px; height: 3rem;">
           <button onclick="startGame()" class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 font-bold">Start Game</button>
         </div>
         <div id="targetError" class="text-red-500 border-red-500 mt-1 hidden"></div>
@@ -63,7 +69,8 @@
     <div id="leaderboard" class="mb-4">
       <h2 class="text-xl font-semibold mb-2">Leaderboard - <span id="leaderboardGameName">Untitled</span> (Total Bet: $<span id="totalBetAmount">0.00</span>)</h2>
       <div class="leaderboard-table">
-        <table>
+        <!-- <table> -->
+        <table class="table table-bordered table-striped">
           <thead id="leaderboardHead"></thead>
           <tbody id="leaderboardTable"></tbody>
         </table>
@@ -78,7 +85,8 @@
     </div>
     <!-- Add Extra Player -->
     <div class="mt-2 editable hidden" id="extraPlayerControls">
-      <input id="extraPlayerName" type="text" placeholder="New player name" class="border rounded p-2" style="width: 110px; height: 2.5rem;">
+      <!-- <input id="extraPlayerName" type="text" placeholder="New player name" class="border rounded p-2" style="width: 110px; height: 2.5rem;"> -->
+      <input id="extraPlayerName" type="text" placeholder="New player name" class="form-control" style="width: 110px; height: 2.5rem;">
       <button onclick="addExtraPlayer()" class="bg-green-500 text-black px-3 py-2 rounded hover:bg-green-600">Add Extra Player</button>
       <div id="extraPlayerError" class="text-red-500 mt-1 hidden"></div>
     </div>
@@ -94,7 +102,8 @@
     <div id="gameHistory" class="mb-4">
       <h2 class="text-xl font-semibold mb-2">Game History</h2>
       <div class="history-table">
-        <table>
+        <!-- <table> -->
+        <table class="table table-bordered table-striped">
           <thead>
             <tr class="bg-gray-200">
               <th class="p-1">Game</th>
