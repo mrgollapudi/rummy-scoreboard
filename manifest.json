@@ -1,0 +1,20 @@
+{
+  "name": "Rummy Score Board",
+  "short_name": "RummyBoard",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#006400",
+  "icons": [
+    {
+      "src": "king-of-diamonds.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "king-of-diamonds.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
