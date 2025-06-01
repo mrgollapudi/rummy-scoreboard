@@ -1107,20 +1107,18 @@ updateLeaderboard();
         loadGameState();
 
 
-function restoreCurrentGame() {
-    const backup = localStorage.getItem("rummyTempGameBackup");
-    try {
-        const parsed = JSON.parse(backup);
-        if (parsed && parsed.players && parsed.players.length) {
-            localStorage.setItem("rummyGameState", backup);
-            location.reload();
-        } else {
-            alert("No active game to return to.");
-        }
-    } catch (e) {
+ catch (e) {
         alert("Invalid saved game. Cannot restore.");
     }
 }
+
+ catch (e) {
+        alert("Invalid saved game. Cannot restore.");
+        console.error("restoreCurrentGame error:", e);
+    }
+}
+
+
 
 function restoreCurrentGame() {
     const backup = localStorage.getItem("rummyTempGameBackup");
@@ -1152,7 +1150,6 @@ function loadLocalGameState() {
         history = state.history || [];
         eliminatedPlayers = state.eliminatedPlayers || [];
 
-        // Legacy properties
         round = state.round || 1;
         gameStarted = state.gameStarted || false;
         roundScores = state.roundScores || [];
@@ -1162,20 +1159,38 @@ function loadLocalGameState() {
         isEditing = state.isEditing || false;
 
         renderPlayerList();
+        updateTargetDisplay();
+        updateLeaderboard();
+        updateScoreForm();
+        updateGameHistory();
 
+        if (TARGET_SCORE) {
             els.targetScore.value = TARGET_SCORE;
             els.targetScore.disabled = true;
             els.targetValue.textContent = TARGET_SCORE;
             els.targetDisplay.classList.remove('hidden');
+        }
 
+        updatePlayerList();
 
+        if (gameStarted) {
             els.playerSetup.classList.add('hidden');
             els.scoreInput.classList.remove('hidden');
+            if (els.gameOver && players.filter(p => !p.eliminated).length <= 1) {
                 els.scoreInput.classList.add('hidden');
                 els.gameOver.classList.remove('hidden');
                 endGame();
+            } else {
+                updateScoreForm();
+            }
+        }
 
+        if (postButtons) postButtons.classList.add('hidden');
 
+    } catch (e) {
         console.error("Failed to load local game state:", e);
         alert("Saved game is invalid or corrupted. Starting a new game.");
         resetGame();
+    }
+} 
+//9:00pm 1st June
