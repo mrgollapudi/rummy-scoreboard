@@ -96,8 +96,6 @@
 
         function calculateWinnings() {
             const activePlayers = players.filter(p => !p.eliminated);
-    const postButtons = document.getElementById('postEndButtons');
-    if (postButtons) postButtons.classList.remove('hidden');
             const totalBetAmount = parseFloat(calculateTotalBetAmount());
             const initialBet = players.length > 0 ? players[0].initialBetAmount : 0;
             const winnings = [];
@@ -333,8 +331,6 @@
             const filteredHistory = existingHistory.filter(g => g.startDateTime !== startDateTime);
 
             const activePlayers = players.filter(p => !p.eliminated);
-    const postButtons = document.getElementById('postEndButtons');
-    if (postButtons) postButtons.classList.remove('hidden');
             const winnings = calculateWinnings();
             let result = winnings ?
                 winnings.filter(w => w.winnings !== 0).map(w => `${w.name}: $${w.winnings > 0 ? '+' : ''}${w.winnings}`).join(', ') :
@@ -917,8 +913,6 @@
             els.leaderboardTable.innerHTML = tableHTML;
             // ✅ Hide End Game button if there is only one player left
             const activePlayers = players.filter(p => !p.eliminated);
-    const postButtons = document.getElementById('postEndButtons');
-    if (postButtons) postButtons.classList.remove('hidden');
             const manualEndBtn = document.getElementById('manualEndButton');
 
             if (manualEndBtn) {
@@ -939,8 +933,6 @@
             els.gameOver.classList.remove('hidden');
             gameEnded = true;
             const activePlayers = players.filter(p => !p.eliminated);
-    const postButtons = document.getElementById('postEndButtons');
-    if (postButtons) postButtons.classList.remove('hidden');
             const winnings = calculateWinnings();
             const hasDrops = activePlayers.some(p => Math.floor((TARGET_SCORE - p.totalScore) / 24) > 0);
 
@@ -992,6 +984,8 @@
 
             saveGameState();
             saveGameHistory();
+    const postButtons = document.getElementById('postEndButtons');
+    if (postButtons) postButtons.classList.remove('hidden');
         }
 
         function resumeGame() {
@@ -1057,6 +1051,8 @@
             if (isReadOnly) return;
             if (gameStarted) {
                 saveGameHistory();
+    const postButtons = document.getElementById('postEndButtons');
+    if (postButtons) postButtons.classList.remove('hidden');
                 gameEnded = false;
             }
             players = [];
