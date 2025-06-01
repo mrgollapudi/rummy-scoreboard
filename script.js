@@ -54,7 +54,7 @@
 
         // Cached DOM elements
         const els = {
-let postButtons = document.getElementById("postEndButtons");
+
             playerSetup: document.getElementById('playerSetup'),
             scoreInput: document.getElementById('scoreInput'),
             extraPlayerControls: document.getElementById('extraPlayerControls'),
@@ -81,6 +81,9 @@ let postButtons = document.getElementById("postEndButtons");
             historyTable: document.getElementById('historyTable'),
             gameOverButtons: document.getElementById('gameOverButtons')
         };
+
+let postButtons = document.getElementById("postEndButtons");
+
 
         function formatName(name) {
             return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
