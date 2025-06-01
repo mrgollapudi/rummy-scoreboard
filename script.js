@@ -1,4 +1,4 @@
-        var gk_isXlsx = false;
+var gk_isXlsx = false;
         var gk_xlsxFileLookup = {};
         var gk_fileData = {};
 
@@ -8,7 +8,7 @@
 
         function loadFileData(filename) {
             if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-                
+                try {
                     var workbook = XLSX.read(gk_fileData[filename], {
                         type: 'base64'
                     });
@@ -29,7 +29,10 @@
                     var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
                     csv = XLSX.utils.sheet_to_csv(csv);
                     return csv;
-                } 
+                } catch (e) {
+                    console.error(e);
+                    return "";
+                }
             }
             return gk_fileData[filename] || "";
         }
@@ -175,9 +178,13 @@ let postButtons = document.getElementById("postEndButtons");
             }
 
             sharedGames[id] = gameData;
-            
+            try {
                 localStorage.setItem('rummySharedGames', JSON.stringify(sharedGames));
-            } 
+            } catch (e) {
+                console.error('Storage error:', e);
+                alert('Storage limit reached. Clear history or try again.');
+                return null;
+            }
             return id;
         }
 
@@ -1085,7 +1092,7 @@ let postButtons = document.getElementById("postEndButtons");
 
 function restoreCurrentGame() {
     const backup = localStorage.getItem("rummyTempGameBackup");
-    
+    try {
         const parsed = JSON.parse(backup);
         if (parsed && parsed.players && parsed.players.length) {
             localStorage.setItem("rummyGameState", backup);
@@ -1093,5 +1100,23 @@ function restoreCurrentGame() {
         } else {
             alert("No active game to return to.");
         }
-    } 
+    } catch (e) {
+        alert("Invalid saved game. Cannot restore.");
+    }
+}
+
+function restoreCurrentGame() {
+    const backup = localStorage.getItem("rummyTempGameBackup");
+    try {
+        const parsed = JSON.parse(backup);
+        if (parsed && parsed.players && parsed.players.length) {
+            localStorage.setItem("rummyGameState", backup);
+            location.reload();
+        } else {
+            alert("No active game to return to.");
+        }
+    } catch (e) {
+        alert("Invalid saved game. Cannot restore.");
+        console.error("restoreCurrentGame error:", e);
+    }
 }
