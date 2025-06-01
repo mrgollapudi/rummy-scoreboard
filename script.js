@@ -1093,11 +1093,14 @@ let postButtons = document.getElementById("postEndButtons");
 function restoreCurrentGame() {
     const backup = localStorage.getItem("rummyTempGameBackup");
     try {
-    const parsed = JSON.parse(backup);
-    if (parsed && parsed.players && parsed.players.length) {
-                localStorage.setItem("rummyGameState", backup);
-                location.reload();
-    } else {
-        alert("No active game to return to.");
+        const parsed = JSON.parse(backup);
+        if (parsed && parsed.players && parsed.players.length) {
+            localStorage.setItem("rummyGameState", backup);
+            location.reload();
+        } else {
+            alert("No active game to return to.");
+        }
+    } catch (e) {
+        alert("Invalid saved game. Cannot restore.");
     }
 }
