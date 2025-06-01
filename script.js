@@ -204,8 +204,7 @@
         }
 
         function generateHistoryShareLink(startDateTime) {
-            localStorage.setItem("rummyTempGameBackup", localStorage.getItem("rummyGameState"));
-    const game = gameHistory.find(g => g.startDateTime === startDateTime);
+            const game = gameHistory.find(g => g.startDateTime === startDateTime);
             if (!game) {
                 alert('Game not found.');
                 return;
@@ -387,8 +386,7 @@
 
         function viewGameHistory(startDateTime) {
             if (isReadOnly) return;
-            localStorage.setItem("rummyTempGameBackup", localStorage.getItem("rummyGameState"));
-    const game = gameHistory.find(g => g.startDateTime === startDateTime);
+            const game = gameHistory.find(g => g.startDateTime === startDateTime);
             if (!game) {
                 els.leaderboardTable.innerHTML = '<tr><td colspan="100" class="text-red-500">Game not found.</td></tr>';
                 return;
@@ -1068,14 +1066,3 @@
         // Load game state on page load
         loadGameState();
 
-
-function restoreCurrentGame() {
-    const backup = localStorage.getItem("rummyTempGameBackup");
-    if (backup) {
-        localStorage.setItem("rummyGameState", backup);
-        location.reload();
-    } else {
-        alert("No active game to return to.");
-    }
-} 
-//9:20pm
