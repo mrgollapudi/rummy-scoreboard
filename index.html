@@ -76,15 +76,14 @@
     </div>
     <!-- ✅ New End Game Button Placement -->
     <div class="mt-2 editable" id="manualEndButton">
-      <button onclick="endGame(true)" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 font-bold">End Game</button>
-    </div>
-    
-<div id="postEndButtons" class="mt-2 editable hidden flex gap-2">
+<div class="mt-2 editable hidden flex gap-2" id="postEndButtons">
   <button onclick="resumeGame()" class="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-600">Resume Game</button>
   <button onclick="resetGame()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">New Game</button>
 </div>
 
-<!-- Add Extra Player -->
+      <button onclick="endGame(true)" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 font-bold">End Game</button>
+    </div>
+    <!-- Add Extra Player -->
     <div class="mt-2 editable hidden" id="extraPlayerControls">
       <input id="extraPlayerName" type="text" placeholder="New player name" class="border rounded p-2" style="width: 110px; height: 2.5rem;">
       <button onclick="addExtraPlayer()" class="bg-green-500 text-black px-3 py-2 rounded hover:bg-green-600">Add Extra Player</button>
