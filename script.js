@@ -8,7 +8,7 @@
 
         function loadFileData(filename) {
             if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-                try {
+                
                     var workbook = XLSX.read(gk_fileData[filename], {
                         type: 'base64'
                     });
@@ -29,10 +29,7 @@
                     var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
                     csv = XLSX.utils.sheet_to_csv(csv);
                     return csv;
-                } catch (e) {
-                    console.error(e);
-                    return "";
-                }
+                } 
             }
             return gk_fileData[filename] || "";
         }
@@ -178,13 +175,9 @@ let postButtons = document.getElementById("postEndButtons");
             }
 
             sharedGames[id] = gameData;
-            try {
+            
                 localStorage.setItem('rummySharedGames', JSON.stringify(sharedGames));
-            } catch (e) {
-                console.error('Storage error:', e);
-                alert('Storage limit reached. Clear history or try again.');
-                return null;
-            }
+            } 
             return id;
         }
 
@@ -278,10 +271,6 @@ let postButtons = document.getElementById("postEndButtons");
                     updateLeaderboard();
                     updateGameHistory();
     if (postButtons) postButtons.classList.add('hidden');
-    } catch (e) {
-        console.error("Failed to load local game state:", e);
-        alert("Game state could not be loaded. It might be corrupted.");
-    }
                 } else {
                     alert('Invalid or expired share link.');
                     loadLocalGameState();
@@ -292,7 +281,6 @@ let postButtons = document.getElementById("postEndButtons");
         }
 
         function loadLocalGameState() {
-    try {
             const state = JSON.parse(localStorage.getItem('rummyGameState') || '{}');
             if (state.players) {
                 players = state.players;
@@ -327,10 +315,6 @@ let postButtons = document.getElementById("postEndButtons");
             }
             updateGameHistory();
     if (postButtons) postButtons.classList.add('hidden');
-    } catch (e) {
-        console.error("Failed to load local game state:", e);
-        alert("Game state could not be loaded. It might be corrupted.");
-    }
         }
 
         function saveGameHistory() {
@@ -380,10 +364,6 @@ let postButtons = document.getElementById("postEndButtons");
             localStorage.setItem('rummyGameHistory', JSON.stringify(filteredHistory));
             updateGameHistory();
     if (postButtons) postButtons.classList.add('hidden');
-    } catch (e) {
-        console.error("Failed to load local game state:", e);
-        alert("Game state could not be loaded. It might be corrupted.");
-    }
         }
 
 
@@ -815,20 +795,12 @@ let postButtons = document.getElementById("postEndButtons");
                 updateLeaderboard();
                 updateGameHistory();
     if (postButtons) postButtons.classList.add('hidden');
-    } catch (e) {
-        console.error("Failed to load local game state:", e);
-        alert("Game state could not be loaded. It might be corrupted.");
-    }
                 endGame();
             } else {
                 updateScoreForm();
                 updateLeaderboard();
                 updateGameHistory();
     if (postButtons) postButtons.classList.add('hidden');
-    } catch (e) {
-        console.error("Failed to load local game state:", e);
-        alert("Game state could not be loaded. It might be corrupted.");
-    }
             }
             saveGameState();
     if (postButtons) postButtons.classList.add('hidden');
@@ -1105,10 +1077,6 @@ let postButtons = document.getElementById("postEndButtons");
             localStorage.removeItem('rummyGameState');
             updateGameHistory();
     if (postButtons) postButtons.classList.add('hidden');
-    } catch (e) {
-        console.error("Failed to load local game state:", e);
-        alert("Game state could not be loaded. It might be corrupted.");
-    }
         }
 
         // Load game state on page load
@@ -1117,7 +1085,7 @@ let postButtons = document.getElementById("postEndButtons");
 
 function restoreCurrentGame() {
     const backup = localStorage.getItem("rummyTempGameBackup");
-    try {
+    
         const parsed = JSON.parse(backup);
         if (parsed && parsed.players && parsed.players.length) {
             localStorage.setItem("rummyGameState", backup);
@@ -1125,7 +1093,5 @@ function restoreCurrentGame() {
         } else {
             alert("No active game to return to.");
         }
-    } catch (e) {
-        alert("Invalid saved game. Cannot restore.");
-    }
+    } 
 }
