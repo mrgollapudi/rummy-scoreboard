@@ -27,7 +27,17 @@
     </div>
   </div>
 
-  <div style="padding-left: 1.5rem;" class="bg-white rounded-lg shadow-lg p-4 w-full max-w-4xl container">
+  
+<!-- Tabs -->
+<div class="flex space-x-2 mb-4">
+  <button onclick="showTab('boardTab')" class="tab-button bg-blue-600 text-white px-4 py-2 rounded">Board</button>
+  <button onclick="showTab('winningsTab')" class="tab-button bg-gray-300 text-black px-4 py-2 rounded">Winnings</button>
+  <button onclick="showTab('rulesTab')" class="tab-button bg-gray-300 text-black px-4 py-2 rounded">Rules</button>
+</div>
+
+<div id="tabsWrapper">
+<div id="boardTab">
+<div style="padding-left: 1.5rem;" class="bg-white rounded-lg shadow-lg p-4 w-full max-w-4xl container">
     <div id="targetDisplay" class="text-xl font-bold text-center mb-2 hidden editable">
       Target Score: <span id="targetValue"></span>
     </div>
@@ -103,6 +113,9 @@
   </button>
 </div>
 
+</div>
+
+<div id="winningsTab" class="hidden">
 <!-- Winnings Summary Table -->
 <div id="winningsSummaryContainer" class="hidden overflow-x-auto px-4">
   <label for="summaryDay" class="block mb-2 text-sm font-medium text-gray-700">Select Day:</label>
@@ -136,7 +149,23 @@
       </div>
     </div>
 
-    <!-- Footer -->
+    </div>
+
+<div id="rulesTab" class="hidden"><div class="p-4 bg-white rounded shadow"><h2 class="text-xl font-semibold mb-2">Game Rules</h2>
+<div id="gameRulesContent" class="whitespace-pre-line text-sm text-gray-800">Loading rules...</div>
+<script>
+  fetch('rules.txt')
+    .then(response => response.ok ? response.text() : Promise.reject('Could not load rules.txt'))
+    .then(text => {
+      document.getElementById('gameRulesContent').textContent = text;
+    })
+    .catch(err => {
+      document.getElementById('gameRulesContent').textContent = "Error loading rules: " + err;
+    });
+</script>
+</div></div>
+
+<!-- Footer -->
     <footer class="footer text-center text-sm text-gray-600 mt-4">
       © 2025 MRGollapudi.
     </footer>
@@ -151,6 +180,26 @@
       navigator.serviceWorker.register("sw.js").then(() => console.log("Service Worker Registered"));
     }
   </script>
+
+<script>
+function showTab(tabId) {
+  document.getElementById("boardTab").classList.add("hidden");
+  document.getElementById("winningsTab").classList.add("hidden");
+  document.getElementById("rulesTab").classList.add("hidden");
+
+  document.querySelectorAll(".tab-button").forEach(btn => {
+    btn.classList.remove("bg-blue-600", "text-white");
+    btn.classList.add("bg-gray-300", "text-black");
+  });
+
+  document.getElementById(tabId).classList.remove("hidden");
+  const activeBtn = Array.from(document.querySelectorAll(".tab-button")).find(btn => btn.textContent.trim().toLowerCase().includes(tabId.replace("Tab", "").toLowerCase()));
+  if (activeBtn) {
+    activeBtn.classList.add("bg-blue-600", "text-white");
+    activeBtn.classList.remove("bg-gray-300", "text-black");
+  }
+}
+</script>
 </body>
 
 </html> 
