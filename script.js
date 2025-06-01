@@ -1112,5 +1112,5 @@ function restoreCurrentGame() {
     updateScoreForm();
     updateLeaderboard();
     updatePlayerList();
-    updateTargetDisplay();
+    if (typeof updateTargetDisplay === 'function') updateTargetDisplay();
 }
