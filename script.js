@@ -1103,32 +1103,23 @@ function renderWinningsSummary() {
     // Build header
     headerRow.innerHTML = `
         <th class="py-2 px-4 border">Date</th>
-        <th class="py-2 px-4 border">Time</th>
-        <th class="py-2 px-4 border">Game</th>
         ${players.map(p => `<th class="py-2 px-4 border">${p}</th>`).join('')}
     `;
 
     const totals = {};
     players.forEach(p => totals[p] = 0);
 
-    // Rows
-    filteredGames.forEach(game => {
-        const dt = new Date(game.startDateTime);
-        const dateStr = dt.toISOString().split('T')[0];
-        const timeStr = dt.toTimeString().split(' ')[0].slice(0,5);
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td class="py-2 px-4 border">${dateStr}</td>
-            <td class="py-2 px-4 border">${timeStr}</td>
-            <td class="py-2 px-4 border">${game.gameName || ''}</td>
-            ${players.map(p => {
-                const val = game.winnings?.[p] || 0;
-                totals[p] += val;
-                return `<td class="py-2 px-4 border text-right">${val >= 0 ? '$' + val.toFixed(2) : '-$' + Math.abs(val).toFixed(2)}</td>`;
-            }).join('')}
-        `;
-        body.appendChild(row);
-    });
+    const summaryRow = document.createElement('tr');
+    const dateStr = selectedDate;
+    summaryRow.innerHTML = `
+        <td class="py-2 px-4 border">${dateStr}</td>
+        ${players.map(p => {
+            const total = filteredGames.reduce((sum, g) => sum + (g.winnings?.[p] || 0), 0);
+            totals[p] = total;
+            return `<td class="py-2 px-4 border text-right">${total >= 0 ? '$' + total.toFixed(2) : '-$' + Math.abs(total).toFixed(2)}</td>`;
+        }).join('')}
+    `;
+    body.appendChild(summaryRow);
 
     // Footer (totals)
     const totalRow = document.createElement('tr');
