@@ -1,4 +1,4 @@
-var gk_isXlsx = false;
+        var gk_isXlsx = false;
         var gk_xlsxFileLookup = {};
         var gk_fileData = {};
 
@@ -54,7 +54,6 @@ var gk_isXlsx = false;
 
         // Cached DOM elements
         const els = {
-
             playerSetup: document.getElementById('playerSetup'),
             scoreInput: document.getElementById('scoreInput'),
             extraPlayerControls: document.getElementById('extraPlayerControls'),
@@ -81,9 +80,6 @@ var gk_isXlsx = false;
             historyTable: document.getElementById('historyTable'),
             gameOverButtons: document.getElementById('gameOverButtons')
         };
-
-let postButtons = document.getElementById("postEndButtons");
-
 
         function formatName(name) {
             return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
@@ -277,7 +273,6 @@ let postButtons = document.getElementById("postEndButtons");
                     els.shareLeaderboard.classList.add('hidden');
                     updateLeaderboard();
                     updateGameHistory();
-    if (postButtons) postButtons.classList.add('hidden');
                 } else {
                     alert('Invalid or expired share link.');
                     loadLocalGameState();
@@ -287,58 +282,40 @@ let postButtons = document.getElementById("postEndButtons");
             }
         }
 
+        function loadLocalGameState() {
+            const state = JSON.parse(localStorage.getItem('rummyGameState') || '{}');
+            if (state.players) {
+                players = state.players;
+                round = state.round || 1;
+                gameStarted = state.gameStarted || false;
+                roundScores = state.roundScores || [];
+                TARGET_SCORE = state.TARGET_SCORE || null;
+                REJOIN_THRESHOLD = state.REJOIN_THRESHOLD || null;
+                gameName = state.gameName || '';
+                startDateTime = state.startDateTime || null;
+                isEditing = state.isEditing || false;
 
-        players = state.players;
-        gameName = state.gameName || '';
-        targetScore = state.targetScore || null;
-        currentRound = state.currentRound || 1;
-        history = state.history || [];
-        eliminatedPlayers = state.eliminatedPlayers || [];
-
-        // Optional legacy compatibility block
-        round = state.round || 1;
-        gameStarted = state.gameStarted || false;
-        roundScores = state.roundScores || [];
-        TARGET_SCORE = state.TARGET_SCORE || null;
-        REJOIN_THRESHOLD = state.REJOIN_THRESHOLD || null;
-        startDateTime = state.startDateTime || null;
-        isEditing = state.isEditing || false;
-
-        renderPlayerList();
-        updateTargetDisplay();
-        updateLeaderboard();
-        updateScoreForm();
-        updateGameHistory();
-        if (TARGET_SCORE) {
-            els.targetScore.value = TARGET_SCORE;
-            els.targetScore.disabled = true;
-            els.targetValue.textContent = TARGET_SCORE;
-            els.targetDisplay.classList.remove('hidden');
-        }
-        updatePlayerList();
-        if (gameStarted) {
-            els.playerSetup.classList.add('hidden');
-            els.scoreInput.classList.remove('hidden');
-            if (els.gameOver && players.filter(p => !p.eliminated).length <= 1) {
-                els.scoreInput.classList.add('hidden');
-                els.gameOver.classList.remove('hidden');
-                endGame();
-            } else {
-                updateScoreForm();
-            }
-        }
-
-        if (postButtons) postButtons.classList.add('hidden');
-
-    } catch (e) {
-        console.error("Failed to load local game state:", e);
-        alert("Saved game is invalid or corrupted. Starting a new game.");
-        resetGame();
-    }
-updateLeaderboard();
+                if (TARGET_SCORE) {
+                    els.targetScore.value = TARGET_SCORE;
+                    els.targetScore.disabled = true;
+                    els.targetValue.textContent = TARGET_SCORE;
+                    els.targetDisplay.classList.remove('hidden');
+                }
+                updatePlayerList();
+                if (gameStarted) {
+                    els.playerSetup.classList.add('hidden');
+                    els.scoreInput.classList.remove('hidden');
+                    if (els.gameOver && players.filter(p => !p.eliminated).length <= 1) {
+                        els.scoreInput.classList.add('hidden');
+                        els.gameOver.classList.remove('hidden');
+                        endGame();
+                    } else {
+                        updateScoreForm();
+                    }
+                }
+                updateLeaderboard();
             }
             updateGameHistory();
-    if (postButtons) postButtons.classList.add('hidden');
         }
 
         function saveGameHistory() {
@@ -387,7 +364,6 @@ updateLeaderboard();
             filteredHistory.push(gameData);
             localStorage.setItem('rummyGameHistory', JSON.stringify(filteredHistory));
             updateGameHistory();
-    if (postButtons) postButtons.classList.add('hidden');
         }
 
 
@@ -546,7 +522,6 @@ updateLeaderboard();
             els.playerError.classList.add('hidden');
             updatePlayerList();
             saveGameState();
-    if (postButtons) postButtons.classList.add('hidden');
         }
 
 
@@ -566,7 +541,6 @@ updateLeaderboard();
             updatePlayerList();
             updateLeaderboard();
             saveGameState();
-    if (postButtons) postButtons.classList.add('hidden');
         }
 
         function startGame() {
@@ -602,7 +576,6 @@ updateLeaderboard();
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
-    if (postButtons) postButtons.classList.add('hidden');
             // ✅ Show Add Extra Player input
             els.extraPlayerControls.classList.remove('hidden');
 
@@ -711,7 +684,6 @@ updateLeaderboard();
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
-    if (postButtons) postButtons.classList.add('hidden');
         }
 
 
@@ -818,16 +790,13 @@ updateLeaderboard();
             if (activePlayersAfter.length <= 1) {
                 updateLeaderboard();
                 updateGameHistory();
-    if (postButtons) postButtons.classList.add('hidden');
                 endGame();
             } else {
                 updateScoreForm();
                 updateLeaderboard();
                 updateGameHistory();
-    if (postButtons) postButtons.classList.add('hidden');
             }
             saveGameState();
-    if (postButtons) postButtons.classList.add('hidden');
         }
 
         function rejoinPlayer(name) {
@@ -851,7 +820,6 @@ updateLeaderboard();
                 updateScoreForm();
                 updateLeaderboard();
                 saveGameState();
-    if (postButtons) postButtons.classList.add('hidden');
             } else {
                 alert(`${getPlayerDisplayName(player)} cannot rejoin. Rejoin is only allowed in the next round after elimination, and the highest score (${maxScore}) must not exceed ${REJOIN_THRESHOLD}.`);
             }
@@ -1005,9 +973,7 @@ updateLeaderboard();
             }
 
             saveGameState();
-    if (postButtons) postButtons.classList.add('hidden');
             saveGameHistory();
-    if (postButtons) postButtons.classList.remove('hidden');
         }
 
         function resumeGame() {
@@ -1019,7 +985,6 @@ updateLeaderboard();
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
-    if (postButtons) postButtons.classList.add('hidden');
         }
 
         function addExtraPlayer() {
@@ -1068,14 +1033,12 @@ updateLeaderboard();
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
-    if (postButtons) postButtons.classList.add('hidden');
         }
 
         function resetGame() {
             if (isReadOnly) return;
             if (gameStarted) {
                 saveGameHistory();
-    if (postButtons) postButtons.classList.remove('hidden');
                 gameEnded = false;
             }
             players = [];
@@ -1100,112 +1063,18 @@ updateLeaderboard();
             updateLeaderboard();
             localStorage.removeItem('rummyGameState');
             updateGameHistory();
-    if (postButtons) postButtons.classList.add('hidden');
         }
 
         // Load game state on page load
         loadGameState();
 
 
- catch (e) {
-        alert("Invalid saved game. Cannot restore.");
-    }
-}
-
- catch (e) {
-        alert("Invalid saved game. Cannot restore.");
-        console.error("restoreCurrentGame error:", e);
-    }
-}
-
-
-
 function restoreCurrentGame() {
     const backup = localStorage.getItem("rummyTempGameBackup");
-    try {
-        const parsed = JSON.parse(backup);
-        if (parsed && parsed.players && parsed.players.length) {
-            localStorage.setItem("rummyGameState", backup);
-            location.reload();
-        } else {
-            alert("No active game to return to.");
-        }
-    } catch (e) {
-        alert("Invalid saved game. Cannot restore.");
-        console.error("restoreCurrentGame error:", e);
+    if (backup) {
+        localStorage.setItem("rummyGameState", backup);
+        location.reload();
+    } else {
+        alert("No active game to return to.");
     }
 }
-
-function loadLocalGameState() {
-    try {
-        const state = JSON.parse(localStorage.getItem("rummyGameState") || "{}");
-        if (!state || !Array.isArray(state.players)) {
-            throw new Error("Invalid or missing game state");
-        }
-
-        players = state.players;
-        gameName = state.gameName || '';
-        targetScore = state.targetScore || null;
-        currentRound = state.currentRound || 1;
-        history = state.history || [];
-        eliminatedPlayers = state.eliminatedPlayers || [];
-
-        round = state.round || 1;
-        gameStarted = state.gameStarted || false;
-        roundScores = state.roundScores || [];
-        TARGET_SCORE = state.TARGET_SCORE || null;
-        REJOIN_THRESHOLD = state.REJOIN_THRESHOLD || null;
-        startDateTime = state.startDateTime || null;
-        isEditing = state.isEditing || false;
-
-        renderPlayerList();
-        updateTargetDisplay();
-        updateLeaderboard();
-        updateScoreForm();
-        updateGameHistory();
-
-        if (TARGET_SCORE) {
-            els.targetScore.value = TARGET_SCORE;
-            els.targetScore.disabled = true;
-            els.targetValue.textContent = TARGET_SCORE;
-            els.targetDisplay.classList.remove('hidden');
-        }
-
-        updatePlayerList();
-
-        if (gameStarted) {
-            els.playerSetup.classList.add('hidden');
-            els.scoreInput.classList.remove('hidden');
-            if (els.gameOver && players.filter(p => !p.eliminated).length <= 1) {
-                els.scoreInput.classList.add('hidden');
-                els.gameOver.classList.remove('hidden');
-                endGame();
-            } else {
-                updateScoreForm();
-            }
-        }
-
-        if (postButtons) postButtons.classList.add('hidden');
-
-    } catch (e) {
-        console.error("Failed to load local game state:", e);
-        alert("Saved game is invalid or corrupted. Starting a new game.");
-        resetGame();
-    }
-}
-function restoreCurrentGame() {
-    const backup = localStorage.getItem("rummyTempGameBackup");
-    try {
-        const parsed = JSON.parse(backup);
-        if (parsed && parsed.players && parsed.players.length) {
-            localStorage.setItem("rummyGameState", backup);
-            location.reload();
-        } else {
-            alert("No active game to return to.");
-        }
-    } catch (e) {
-        alert("Invalid saved game. Cannot restore.");
-        console.error("restoreCurrentGame error:", e);
-    }
-} 
-// 9:10pm
