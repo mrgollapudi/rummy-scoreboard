@@ -290,57 +290,58 @@ let postButtons = document.getElementById("postEndButtons");
         function loadLocalGameState() {
     try {
         const state = JSON.parse(localStorage.getItem("rummyGameState") || "{}");
-        if (!state || !state.players || !Array.isArray(state.players)) {
+        if (!state || !Array.isArray(state.players)) {
             throw new Error("Invalid or missing game state");
         }
 
         players = state.players;
-        gameName = state.gameName;
-        targetScore = state.targetScore;
-        currentRound = state.currentRound;
+        gameName = state.gameName || '';
+        targetScore = state.targetScore || null;
+        currentRound = state.currentRound || 1;
         history = state.history || [];
         eliminatedPlayers = state.eliminatedPlayers || [];
+
+        // Optional legacy compatibility block
+        round = state.round || 1;
+        gameStarted = state.gameStarted || false;
+        roundScores = state.roundScores || [];
+        TARGET_SCORE = state.TARGET_SCORE || null;
+        REJOIN_THRESHOLD = state.REJOIN_THRESHOLD || null;
+        startDateTime = state.startDateTime || null;
+        isEditing = state.isEditing || false;
 
         renderPlayerList();
         updateTargetDisplay();
         updateLeaderboard();
         updateScoreForm();
         updateGameHistory();
+        if (TARGET_SCORE) {
+            els.targetScore.value = TARGET_SCORE;
+            els.targetScore.disabled = true;
+            els.targetValue.textContent = TARGET_SCORE;
+            els.targetDisplay.classList.remove('hidden');
+        }
+        updatePlayerList();
+        if (gameStarted) {
+            els.playerSetup.classList.add('hidden');
+            els.scoreInput.classList.remove('hidden');
+            if (els.gameOver && players.filter(p => !p.eliminated).length <= 1) {
+                els.scoreInput.classList.add('hidden');
+                els.gameOver.classList.remove('hidden');
+                endGame();
+            } else {
+                updateScoreForm();
+            }
+        }
+
         if (postButtons) postButtons.classList.add('hidden');
+
     } catch (e) {
         console.error("Failed to load local game state:", e);
         alert("Saved game is invalid or corrupted. Starting a new game.");
         resetGame();
     }
-            if (state.players) {
-                players = state.players;
-                round = state.round || 1;
-                gameStarted = state.gameStarted || false;
-                roundScores = state.roundScores || [];
-                TARGET_SCORE = state.TARGET_SCORE || null;
-                REJOIN_THRESHOLD = state.REJOIN_THRESHOLD || null;
-                gameName = state.gameName || '';
-                startDateTime = state.startDateTime || null;
-                isEditing = state.isEditing || false;
-
-                if (TARGET_SCORE) {
-                    els.targetScore.value = TARGET_SCORE;
-                    els.targetScore.disabled = true;
-                    els.targetValue.textContent = TARGET_SCORE;
-                    els.targetDisplay.classList.remove('hidden');
-                }
-                updatePlayerList();
-                if (gameStarted) {
-                    els.playerSetup.classList.add('hidden');
-                    els.scoreInput.classList.remove('hidden');
-                    if (els.gameOver && players.filter(p => !p.eliminated).length <= 1) {
-                        els.scoreInput.classList.add('hidden');
-                        els.gameOver.classList.remove('hidden');
-                        endGame();
-                    } else {
-                        updateScoreForm();
-                    }
-                }
+}
                 updateLeaderboard();
             }
             updateGameHistory();
@@ -1143,3 +1144,4 @@ function restoreCurrentGame() {
         console.error("restoreCurrentGame error:", e);
     }
 }
+//6:55pm 1st Jun
