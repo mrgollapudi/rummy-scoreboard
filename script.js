@@ -1077,4 +1077,5 @@ function restoreCurrentGame() {
     } else {
         alert("No active game to return to.");
     }
-}
+} 
+//9:20pm
