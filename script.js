@@ -282,40 +282,48 @@
         }
 
         function loadLocalGameState() {
-            const state = JSON.parse(localStorage.getItem('rummyGameState') || '{}');
-            if (state.players) {
-                players = state.players;
-                round = state.round || 1;
-                gameStarted = state.gameStarted || false;
-                roundScores = state.roundScores || [];
-                TARGET_SCORE = state.TARGET_SCORE || null;
-                REJOIN_THRESHOLD = state.REJOIN_THRESHOLD || null;
-                gameName = state.gameName || '';
-                startDateTime = state.startDateTime || null;
-                isEditing = state.isEditing || false;
+    const raw = localStorage.getItem('rummyGameState');
+    if (!raw) return;
 
-                if (TARGET_SCORE) {
-                    els.targetScore.value = TARGET_SCORE;
-                    els.targetScore.disabled = true;
-                    els.targetValue.textContent = TARGET_SCORE;
-                    els.targetDisplay.classList.remove('hidden');
-                }
-                updatePlayerList();
-                if (gameStarted) {
-                    els.playerSetup.classList.add('hidden');
-                    els.scoreInput.classList.remove('hidden');
-                    if (els.gameOver && players.filter(p => !p.eliminated).length <= 1) {
-                        els.scoreInput.classList.add('hidden');
-                        els.gameOver.classList.remove('hidden');
-                        endGame();
-                    } else {
-                        updateScoreForm();
-                    }
-                }
-                updateLeaderboard();
-            }
-            updateGameHistory();
+    try {
+        const state = JSON.parse(raw);
+        if (!state || !Array.isArray(state.players)) return;
+
+        players = state.players;
+        round = state.round || 1;
+        gameStarted = state.gameStarted || false;
+        roundScores = state.roundScores || [];
+        TARGET_SCORE = state.TARGET_SCORE || null;
+        REJOIN_THRESHOLD = state.REJOIN_THRESHOLD || null;
+        gameName = state.gameName || '';
+        startDateTime = state.startDateTime || null;
+        isEditing = state.isEditing || false;
+
+        if (TARGET_SCORE) {
+            els.targetScore.value = TARGET_SCORE;
+            els.targetScore.disabled = true;
+            els.targetValue.textContent = TARGET_SCORE;
+            els.targetDisplay.classList.remove('hidden');
         }
+        updatePlayerList();
+        if (gameStarted) {
+            els.playerSetup.classList.add('hidden');
+            els.scoreInput.classList.remove('hidden');
+            if (els.gameOver && players.filter(p => !p.eliminated).length <= 1) {
+                els.scoreInput.classList.add('hidden');
+                els.gameOver.classList.remove('hidden');
+                endGame();
+            } else {
+                updateScoreForm();
+            }
+        }
+        updateLeaderboard();
+    } catch (e) {
+        console.error('Failed to load game state:', e);
+    }
+
+    updateGameHistory();
+}
 
         function saveGameHistory() {
             if (isReadOnly) return;
@@ -1064,4 +1072,4 @@
         }
 
         // Load game state on page load
-        loadGameState(); 
+        loadGameState();
