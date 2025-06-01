@@ -528,6 +528,8 @@
             els.playerError.classList.add('hidden');
             updatePlayerList();
             saveGameState();
+    const postButtons = document.getElementById('postEndButtons');
+    if (postButtons) postButtons.classList.add('hidden');
         }
 
 
@@ -547,6 +549,8 @@
             updatePlayerList();
             updateLeaderboard();
             saveGameState();
+    const postButtons = document.getElementById('postEndButtons');
+    if (postButtons) postButtons.classList.add('hidden');
         }
 
         function startGame() {
@@ -582,6 +586,8 @@
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
+    const postButtons = document.getElementById('postEndButtons');
+    if (postButtons) postButtons.classList.add('hidden');
             // ✅ Show Add Extra Player input
             els.extraPlayerControls.classList.remove('hidden');
 
@@ -690,6 +696,8 @@
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
+    const postButtons = document.getElementById('postEndButtons');
+    if (postButtons) postButtons.classList.add('hidden');
         }
 
 
@@ -807,6 +815,8 @@
     if (postButtons) postButtons.classList.add('hidden');
             }
             saveGameState();
+    const postButtons = document.getElementById('postEndButtons');
+    if (postButtons) postButtons.classList.add('hidden');
         }
 
         function rejoinPlayer(name) {
@@ -830,6 +840,8 @@
                 updateScoreForm();
                 updateLeaderboard();
                 saveGameState();
+    const postButtons = document.getElementById('postEndButtons');
+    if (postButtons) postButtons.classList.add('hidden');
             } else {
                 alert(`${getPlayerDisplayName(player)} cannot rejoin. Rejoin is only allowed in the next round after elimination, and the highest score (${maxScore}) must not exceed ${REJOIN_THRESHOLD}.`);
             }
@@ -983,6 +995,8 @@
             }
 
             saveGameState();
+    const postButtons = document.getElementById('postEndButtons');
+    if (postButtons) postButtons.classList.add('hidden');
             saveGameHistory();
     const postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.remove('hidden');
@@ -997,6 +1011,8 @@
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
+    const postButtons = document.getElementById('postEndButtons');
+    if (postButtons) postButtons.classList.add('hidden');
         }
 
         function addExtraPlayer() {
@@ -1045,6 +1061,8 @@
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
+    const postButtons = document.getElementById('postEndButtons');
+    if (postButtons) postButtons.classList.add('hidden');
         }
 
         function resetGame() {
@@ -1087,9 +1105,11 @@
 
 function restoreCurrentGame() {
     const backup = localStorage.getItem("rummyTempGameBackup");
-    if (backup) {
-        localStorage.setItem("rummyGameState", backup);
-        location.reload();
+    try {
+    const parsed = JSON.parse(backup);
+    if (parsed && parsed.players && parsed.players.length) {
+                localStorage.setItem("rummyGameState", backup);
+                location.reload();
     } else {
         alert("No active game to return to.");
     }
