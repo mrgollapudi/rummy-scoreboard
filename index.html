@@ -95,7 +95,29 @@
       <div id="gameOverButtons" class="flex gap-2 mt-2"></div>
     </div>
 
-    <!-- Game History -->
+    
+<!-- Toggle Winnings Summary -->
+<div class="text-center my-4">
+  <button onclick="toggleWinningsSummary()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+    Toggle Winnings Summary
+  </button>
+</div>
+
+<!-- Winnings Summary Table -->
+<div id="winningsSummaryContainer" class="hidden overflow-x-auto px-4">
+  <label for="summaryDay" class="block mb-2 text-sm font-medium text-gray-700">Select Day:</label>
+  <input type="date" id="summaryDay" onchange="renderWinningsSummary()" class="mb-4 border border-gray-300 rounded px-2 py-1" />
+  <table id="winningsSummaryTable" class="min-w-full bg-white border border-gray-200 rounded-lg text-sm text-left text-gray-700 shadow-sm">
+    <thead class="bg-gray-100">
+      <tr id="winningsSummaryHeader"></tr>
+    </thead>
+    <tbody id="winningsSummaryBody"></tbody>
+    <tfoot id="winningsSummaryFooter" class="font-bold bg-gray-50"></tfoot>
+  </table>
+</div>
+
+
+<!-- Game History -->
     <div id="gameHistory" class="mb-4">
       <h2 class="text-xl font-semibold mb-2">Game History</h2>
       <div class="history-table">
