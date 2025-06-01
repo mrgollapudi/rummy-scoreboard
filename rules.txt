@@ -1,0 +1,29 @@
+Rummy Scoreboard - Game Rules
+
+1. Game Objective:
+   - Players aim to reduce their score to 0.
+   - The game continues round-by-round until all but one player is eliminated or a player wins based on configured rules.
+
+2. Scoring System:
+   - After each round, players submit their scores.
+   - Winnings are automatically calculated and balanced based on round results.
+   - Negative scores indicate losses; positive scores indicate winnings.
+
+3. Game Setup:
+   - Players are added before starting the game.
+   - A target score (e.g., 100 or 500) may be set to limit the maximum total score.
+
+4. Game History:
+   - All completed games are saved and timestamped.
+   - Past games can be viewed from the Game History section.
+
+5. Winnings Summary:
+   - Use the Winnings tab to view total player earnings for any given day.
+   - Select a date to see individual and total winnings for that day.
+
+6. Other Features:
+   - Resume unfinished games from saved state.
+   - Share game state using the "Share Score Board" button.
+   - All calculations are done automatically after each round.
+
+Note: This scoreboard supports local offline usage with data stored in browser cache.
