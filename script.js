@@ -288,7 +288,31 @@ let postButtons = document.getElementById("postEndButtons");
         }
 
         function loadLocalGameState() {
-            const state = JSON.parse(localStorage.getItem('rummyGameState') || '{}');
+    try {
+        const state = JSON.parse(localStorage.getItem("rummyGameState") || "{}");
+        if (!state || !state.players || !Array.isArray(state.players)) {
+            throw new Error("Invalid or missing game state");
+        }
+
+        players = state.players;
+        gameName = state.gameName;
+        targetScore = state.targetScore;
+        currentRound = state.currentRound;
+        history = state.history || [];
+        eliminatedPlayers = state.eliminatedPlayers || [];
+
+        renderPlayerList();
+        updateTargetDisplay();
+        updateLeaderboard();
+        updateScoreForm();
+        updateGameHistory();
+        if (postButtons) postButtons.classList.add('hidden');
+    } catch (e) {
+        console.error("Failed to load local game state:", e);
+        alert("Saved game is invalid or corrupted. Starting a new game.");
+        resetGame();
+    }
+}');
             if (state.players) {
                 players = state.players;
                 round = state.round || 1;
