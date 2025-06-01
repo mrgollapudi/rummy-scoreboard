@@ -1192,5 +1192,20 @@ function loadLocalGameState() {
         alert("Saved game is invalid or corrupted. Starting a new game.");
         resetGame();
     }
+}
+function restoreCurrentGame() {
+    const backup = localStorage.getItem("rummyTempGameBackup");
+    try {
+        const parsed = JSON.parse(backup);
+        if (parsed && parsed.players && parsed.players.length) {
+            localStorage.setItem("rummyGameState", backup);
+            location.reload();
+        } else {
+            alert("No active game to return to.");
+        }
+    } catch (e) {
+        alert("Invalid saved game. Cannot restore.");
+        console.error("restoreCurrentGame error:", e);
+    }
 } 
-//9:00pm 1st June
+9:10pm
