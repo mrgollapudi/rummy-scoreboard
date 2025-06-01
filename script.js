@@ -312,7 +312,6 @@ let postButtons = document.getElementById("postEndButtons");
         alert("Saved game is invalid or corrupted. Starting a new game.");
         resetGame();
     }
-}');
             if (state.players) {
                 players = state.players;
                 round = state.round || 1;
