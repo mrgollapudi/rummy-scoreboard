@@ -341,8 +341,7 @@ let postButtons = document.getElementById("postEndButtons");
         alert("Saved game is invalid or corrupted. Starting a new game.");
         resetGame();
     }
-}
-                updateLeaderboard();
+updateLeaderboard();
             }
             updateGameHistory();
     if (postButtons) postButtons.classList.add('hidden');
@@ -1144,4 +1143,4 @@ function restoreCurrentGame() {
         console.error("restoreCurrentGame error:", e);
     }
 }
-//6:55pm 1st Jun
+//7:00pm
