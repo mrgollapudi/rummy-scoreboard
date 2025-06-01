@@ -1,4 +1,4 @@
-        var gk_isXlsx = false;
+var gk_isXlsx = false;
         var gk_xlsxFileLookup = {};
         var gk_fileData = {};
 
@@ -47,8 +47,6 @@
         let startDateTime = null;
         let isEditing = false;
         let gameHistory = [];
-let gameBackupState = null;
-let isViewingHistory = false;
         let isReadOnly = false;
         let gameEnded = false;
         const MAX_PLAYERS = 10;
@@ -284,48 +282,40 @@ let isViewingHistory = false;
         }
 
         function loadLocalGameState() {
-    const raw = localStorage.getItem('rummyGameState');
-    if (!raw) return;
+            const state = JSON.parse(localStorage.getItem('rummyGameState') || '{}');
+            if (state.players) {
+                players = state.players;
+                round = state.round || 1;
+                gameStarted = state.gameStarted || false;
+                roundScores = state.roundScores || [];
+                TARGET_SCORE = state.TARGET_SCORE || null;
+                REJOIN_THRESHOLD = state.REJOIN_THRESHOLD || null;
+                gameName = state.gameName || '';
+                startDateTime = state.startDateTime || null;
+                isEditing = state.isEditing || false;
 
-    try {
-        const state = JSON.parse(raw);
-        if (!state || !Array.isArray(state.players)) return;
-
-        players = state.players;
-        round = state.round || 1;
-        gameStarted = state.gameStarted || false;
-        roundScores = state.roundScores || [];
-        TARGET_SCORE = state.TARGET_SCORE || null;
-        REJOIN_THRESHOLD = state.REJOIN_THRESHOLD || null;
-        gameName = state.gameName || '';
-        startDateTime = state.startDateTime || null;
-        isEditing = state.isEditing || false;
-
-        if (TARGET_SCORE) {
-            els.targetScore.value = TARGET_SCORE;
-            els.targetScore.disabled = true;
-            els.targetValue.textContent = TARGET_SCORE;
-            els.targetDisplay.classList.remove('hidden');
-        }
-        updatePlayerList();
-        if (gameStarted) {
-            els.playerSetup.classList.add('hidden');
-            els.scoreInput.classList.remove('hidden');
-            if (els.gameOver && players.filter(p => !p.eliminated).length <= 1) {
-                els.scoreInput.classList.add('hidden');
-                els.gameOver.classList.remove('hidden');
-                endGame();
-            } else {
-                updateScoreForm();
+                if (TARGET_SCORE) {
+                    els.targetScore.value = TARGET_SCORE;
+                    els.targetScore.disabled = true;
+                    els.targetValue.textContent = TARGET_SCORE;
+                    els.targetDisplay.classList.remove('hidden');
+                }
+                updatePlayerList();
+                if (gameStarted) {
+                    els.playerSetup.classList.add('hidden');
+                    els.scoreInput.classList.remove('hidden');
+                    if (els.gameOver && players.filter(p => !p.eliminated).length <= 1) {
+                        els.scoreInput.classList.add('hidden');
+                        els.gameOver.classList.remove('hidden');
+                        endGame();
+                    } else {
+                        updateScoreForm();
+                    }
+                }
+                updateLeaderboard();
             }
+            updateGameHistory();
         }
-        updateLeaderboard();
-    } catch (e) {
-        console.error('Failed to load game state:', e);
-    }
-
-    updateGameHistory();
-}
 
         function saveGameHistory() {
             if (isReadOnly) return;
@@ -395,21 +385,6 @@ let isViewingHistory = false;
         }
 
         function viewGameHistory(startDateTime) {
-    if (!gameBackupState) {
-        gameBackupState = {
-            players: JSON.parse(JSON.stringify(players)),
-            round,
-            gameStarted,
-            roundScores: JSON.parse(JSON.stringify(roundScores)),
-            TARGET_SCORE,
-            REJOIN_THRESHOLD,
-            gameName,
-            startDateTime,
-            isEditing,
-        };
-    }
-    isViewingHistory = true;
-    document.getElementById("currentGameButton").classList.remove("hidden");
             if (isReadOnly) return;
             const game = gameHistory.find(g => g.startDateTime === startDateTime);
             if (!game) {
@@ -1091,26 +1066,75 @@ let isViewingHistory = false;
         // Load game state on page load
         loadGameState();
 
+function toggleWinningsSummary() {
+    const container = document.getElementById('winningsSummaryContainer');
+    if (container.classList.contains('hidden')) {
+        container.classList.remove('hidden');
+        renderWinningsSummary();
+    } else {
+        container.classList.add('hidden');
+    }
+}
 
-function restoreCurrentGame() {
-    if (!gameBackupState) return;
+function renderWinningsSummary() {
+    const container = document.getElementById('winningsSummaryContainer');
+    if (container.classList.contains('hidden')) return;
 
-    players = gameBackupState.players;
-    round = gameBackupState.round;
-    gameStarted = gameBackupState.gameStarted;
-    roundScores = gameBackupState.roundScores;
-    TARGET_SCORE = gameBackupState.TARGET_SCORE;
-    REJOIN_THRESHOLD = gameBackupState.REJOIN_THRESHOLD;
-    gameName = gameBackupState.gameName;
-    startDateTime = gameBackupState.startDateTime;
-    isEditing = gameBackupState.isEditing;
+    const selectedDate = document.getElementById('summaryDay').value;
+    if (!selectedDate) return;
 
-    isViewingHistory = false;
-    gameBackupState = null;
-    document.getElementById("currentGameButton").classList.add("hidden");
+    const headerRow = document.getElementById('winningsSummaryHeader');
+    const body = document.getElementById('winningsSummaryBody');
+    const footer = document.getElementById('winningsSummaryFooter');
+    headerRow.innerHTML = '';
+    body.innerHTML = '';
+    footer.innerHTML = '';
 
-    updateScoreForm();
-    updateLeaderboard();
-    updatePlayerList();
-    if (typeof updateTargetDisplay === 'function') updateTargetDisplay();
+    const filteredGames = gameHistory.filter(g =>
+        g.startDateTime.startsWith(selectedDate)
+    );
+
+    const playersSet = new Set();
+    filteredGames.forEach(g => {
+        Object.keys(g.winnings || {}).forEach(p => playersSet.add(p));
+    });
+    const players = Array.from(playersSet);
+
+    // Build header
+    headerRow.innerHTML = `
+        <th class="py-2 px-4 border">Date</th>
+        <th class="py-2 px-4 border">Time</th>
+        <th class="py-2 px-4 border">Game</th>
+        ${players.map(p => `<th class="py-2 px-4 border">${p}</th>`).join('')}
+    `;
+
+    const totals = {};
+    players.forEach(p => totals[p] = 0);
+
+    // Rows
+    filteredGames.forEach(game => {
+        const dt = new Date(game.startDateTime);
+        const dateStr = dt.toISOString().split('T')[0];
+        const timeStr = dt.toTimeString().split(' ')[0].slice(0,5);
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="py-2 px-4 border">${dateStr}</td>
+            <td class="py-2 px-4 border">${timeStr}</td>
+            <td class="py-2 px-4 border">${game.gameName || ''}</td>
+            ${players.map(p => {
+                const val = game.winnings?.[p] || 0;
+                totals[p] += val;
+                return `<td class="py-2 px-4 border text-right">${val >= 0 ? '$' + val.toFixed(2) : '-$' + Math.abs(val).toFixed(2)}</td>`;
+            }).join('')}
+        `;
+        body.appendChild(row);
+    });
+
+    // Footer (totals)
+    const totalRow = document.createElement('tr');
+    totalRow.innerHTML = `
+        <td colspan="3" class="py-2 px-4 border font-bold text-right">Total</td>
+        ${players.map(p => `<td class="py-2 px-4 border font-bold text-right">${totals[p] >= 0 ? '$' + totals[p].toFixed(2) : '-$' + Math.abs(totals[p]).toFixed(2)}</td>`).join('')}
+    `;
+    footer.appendChild(totalRow);
 }
