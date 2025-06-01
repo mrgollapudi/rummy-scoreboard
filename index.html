@@ -27,19 +27,7 @@
     </div>
   </div>
 
-  
-<!-- Tabs -->
-<div class="border-b border-gray-200 mb-4">
-  <nav class="-mb-px flex space-x-4" aria-label="Tabs">
-    <button onclick="showTab('boardTab')" class="tab-button text-blue-600 border-b-2 border-blue-600 px-3 py-2 font-medium text-sm">Board</button>
-    <button onclick="showTab('winningsTab')" class="tab-button text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent px-3 py-2 font-medium text-sm">Winnings</button>
-    <button onclick="showTab('rulesTab')" class="tab-button text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent px-3 py-2 font-medium text-sm">Game Rules</button>
-</nav>
-</div>
-
-<div id="tabsWrapper">
-<div id="boardTab">
-<div style="padding-left: 1.5rem;" class="bg-white rounded-lg shadow-lg p-4 w-full max-w-4xl container">
+  <div style="padding-left: 1.5rem;" class="bg-white rounded-lg shadow-lg p-4 w-full max-w-4xl container">
     <div id="targetDisplay" class="text-xl font-bold text-center mb-2 hidden editable">
       Target Score: <span id="targetValue"></span>
     </div>
@@ -107,32 +95,7 @@
       <div id="gameOverButtons" class="flex gap-2 mt-2"></div>
     </div>
 
-    
-<!-- Toggle Winnings Summary -->
-<div class="my-4">
-  <button onclick="toggleWinningsSummary()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-    Winnings Summary
-  </button>
-</div>
-
-</div>
-
-<div id="winningsTab" class="hidden">
-<!-- Winnings Summary Table -->
-<div id="winningsSummaryContainer" class="hidden overflow-x-auto px-4">
-  <label for="summaryDay" class="block mb-2 text-sm font-medium text-gray-700">Select Day:</label>
-  <input type="date" id="summaryDay" onchange="renderWinningsSummary()" class="mb-4 border border-gray-300 rounded px-2 py-1" />
-  <table id="winningsSummaryTable" class="min-w-full bg-white border border-gray-200 rounded-lg text-sm text-left text-gray-700 shadow-sm">
-    <thead class="bg-gray-100">
-      <tr id="winningsSummaryHeader"></tr>
-    </thead>
-    <tbody id="winningsSummaryBody"></tbody>
-    <tfoot id="winningsSummaryFooter" class="font-bold bg-gray-50"></tfoot>
-  </table>
-</div>
-
-
-<!-- Game History -->
+    <!-- Game History -->
     <div id="gameHistory" class="mb-4">
       <h2 class="text-xl font-semibold mb-2">Game History</h2>
       <div class="history-table">
@@ -151,23 +114,7 @@
       </div>
     </div>
 
-    </div>
-
-<div id="rulesTab" class="hidden"><div class="p-4 bg-white rounded shadow"><h2 class="text-xl font-semibold mb-2">Game Rules</h2>
-<div id="gameRulesContent" class="whitespace-pre-line text-sm text-gray-800">Loading rules...</div>
-<script>
-  fetch('rules.txt')
-    .then(response => response.ok ? response.text() : Promise.reject('Could not load rules.txt'))
-    .then(text => {
-      document.getElementById('gameRulesContent').textContent = text;
-    })
-    .catch(err => {
-      document.getElementById('gameRulesContent').textContent = "Error loading rules: " + err;
-    });
-</script>
-</div></div>
-
-<!-- Footer -->
+    <!-- Footer -->
     <footer class="footer text-center text-sm text-gray-600 mt-4">
       © 2025 MRGollapudi.
     </footer>
@@ -182,26 +129,6 @@
       navigator.serviceWorker.register("sw.js").then(() => console.log("Service Worker Registered"));
     }
   </script>
-
-<script>
-function showTab(tabId) {
-  document.getElementById("boardTab").classList.add("hidden");
-  document.getElementById("winningsTab").classList.add("hidden");
-  document.getElementById("rulesTab").classList.add("hidden");
-
-  document.querySelectorAll(".tab-button").forEach(btn => {
-    btn.classList.remove("text-blue-600", "border-blue-600");
-    btn.classList.add("text-gray-500", "border-transparent");
-  });
-
-  document.getElementById(tabId).classList.remove("hidden");
-  const activeBtn = Array.from(document.querySelectorAll(".tab-button")).find(btn => btn.textContent.trim().toLowerCase().includes(tabId.replace("Tab", "").toLowerCase()));
-  if (activeBtn) {
-    activeBtn.classList.add("text-blue-600", "border-blue-600");
-    activeBtn.classList.remove("text-gray-500", "border-transparent");
-  }
-}
-</script>
 </body>
 
 </html> 
