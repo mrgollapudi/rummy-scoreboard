@@ -154,7 +154,7 @@
         }
 
         function generateRandomId() {
-            const sharedGames = JSON.parse(sessionStorage.getItem('rummySharedGames') || '{}');
+            const sharedGames = JSON.parse(localStorage.getItem('rummySharedGames') || '{}');
             let id;
             do {
                 id = Math.floor(100000 + Math.random() * 9000000).toString(); // 6-7 digits
@@ -163,7 +163,7 @@
         }
 
         function saveSharedGame(gameData) {
-            let sharedGames = JSON.parse(sessionStorage.getItem('rummySharedGames') || '{}');
+            let sharedGames = JSON.parse(localStorage.getItem('rummySharedGames') || '{}');
             const id = generateRandomId();
 
             // Limit to MAX_SHARED_GAMES
@@ -175,7 +175,7 @@
 
             sharedGames[id] = gameData;
             try {
-                sessionStorage.setItem('rummySharedGames', JSON.stringify(sharedGames));
+                localStorage.setItem('rummySharedGames', JSON.stringify(sharedGames));
             } catch (e) {
                 console.error('Storage error:', e);
                 alert('Storage limit reached. Clear history or try again.');
@@ -236,7 +236,7 @@
 
         function saveGameState() {
             if (!isReadOnly) {
-                sessionStorage.setItem('rummyGameState', JSON.stringify({
+                localStorage.setItem('rummyGameState', JSON.stringify({
                     players,
                     round,
                     gameStarted,
@@ -254,7 +254,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
             if (id) {
-                const sharedGames = JSON.parse(sessionStorage.getItem('rummySharedGames') || '{}');
+                const sharedGames = JSON.parse(localStorage.getItem('rummySharedGames') || '{}');
                 const gameData = sharedGames[id];
                 if (gameData) {
                     isReadOnly = true;
@@ -282,7 +282,7 @@
         }
 
         function loadLocalGameState() {
-            const state = JSON.parse(sessionStorage.getItem('rummyGameState') || '{}');
+            const state = JSON.parse(localStorage.getItem('rummyGameState') || '{}');
             if (state.players) {
                 players = state.players;
                 round = state.round || 1;
@@ -320,7 +320,7 @@
         function saveGameHistory() {
             if (isReadOnly) return;
 
-            const existingHistory = JSON.parse(sessionStorage.getItem('rummyGameHistory') || '[]');
+            const existingHistory = JSON.parse(localStorage.getItem('rummyGameHistory') || '[]');
 
             // Remove existing entry with same startDateTime (if any)
             const filteredHistory = existingHistory.filter(g => g.startDateTime !== startDateTime);
@@ -361,13 +361,13 @@
 
             // Push the new, unique entry
             filteredHistory.push(gameData);
-            sessionStorage.setItem('rummyGameHistory', JSON.stringify(filteredHistory));
+            localStorage.setItem('rummyGameHistory', JSON.stringify(filteredHistory));
             updateGameHistory();
         }
 
 
         function updateGameHistory() {
-            gameHistory = JSON.parse(sessionStorage.getItem('rummyGameHistory') || '[]');
+            gameHistory = JSON.parse(localStorage.getItem('rummyGameHistory') || '[]');
             els.historyTable.innerHTML = gameHistory.length === 0 ?
                 '<tr><td colspan="5" class="text-gray-600">No games found.</td></tr>' :
                 gameHistory.map((game) => `
@@ -1059,7 +1059,7 @@
             els.extraPlayerControls.classList.add('hidden');
             updatePlayerList();
             updateLeaderboard();
-            sessionStorage.removeItem('rummyGameState');
+            localStorage.removeItem('rummyGameState');
             updateGameHistory();
         }
 
