@@ -44,7 +44,7 @@
 
 <!-- Tabs Content -->
 <div class="tab-content" id="mainTabsContent">
-  <div class="tab-pane fade show active" id="board" role="tabpanel" aria-labelledby="board-tab">
+  <div class="tab-pane fade show active" id="board" role="tabpanel" aria-labelledby="board-tab" style="padding-left: 1.5rem;">
 
 <div style="padding-left: 1.5rem;" class="bg-white rounded-lg shadow-lg p-4 w-full max-w-4xl container">
     <div id="targetDisplay" class="text-xl font-bold text-center mb-2 hidden editable">
@@ -138,14 +138,33 @@
   <div class="tab-pane fade" id="rules" role="tabpanel" aria-labelledby="rules-tab">
     <div class="p-3">
       <h2>Game Rules</h2>
-      <pre id="rulesContent" class="bg-light p-3 rounded border">Loading rules...</pre>
+      <pre class="bg-light p-3 rounded border">Rummy Scoreboard - Game Rules
+
+1. Game Objective:
+   - Players aim to reduce their score to 0.
+   - The game continues round-by-round until all but one player is eliminated or a player wins based on configured rules.
+
+2. Scoring System:
+   - After each round, players submit their scores.
+   - Winnings are automatically calculated and balanced based on round results.
+   - Negative scores indicate losses; positive scores indicate winnings.
+
+3. Game Setup:
+   - Players are added before starting the game.
+   - A target score (e.g., 100 or 500) may be set to limit the maximum total score.
+
+4. Game History:
+   - All completed games are saved and timestamped.
+   - Past games can be viewed from the Game History section.
+
+5. Other Features:
+   - Resume unfinished games from saved state.
+   - Share game state using the "Share Score Board" button.
+   - All calculations are done automatically after each round.
+
+Note: This scoreboard supports local offline usage with data stored in browser cache.
+</pre>
     </div>
-    <script>
-      fetch('rules.txt')
-        .then(r => r.ok ? r.text() : Promise.reject("Error loading rules.txt"))
-        .then(text => document.getElementById('rulesContent').textContent = text)
-        .catch(e => document.getElementById('rulesContent').textContent = e);
-    </script>
   </div>
 </div>
 
