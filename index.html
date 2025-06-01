@@ -27,15 +27,7 @@
     </div>
   </div>
 
-  
-<!-- Tabs -->
-<div class="flex space-x-2 mb-4 px-4 pt-2">
-  <button onclick="showTab('boardTab')" class="tab-button bg-blue-600 text-white px-4 py-2 rounded">Board</button>
-  <button onclick="showTab('rulesTab')" class="tab-button bg-gray-300 text-black px-4 py-2 rounded">Rules</button>
-</div>
-
-<div id="boardTab">
-<div style="padding-left: 1.5rem;" class="bg-white rounded-lg shadow-lg p-4 w-full max-w-4xl container">
+  <div class="p-4 bg-white rounded-lg shadow max-w-3xl mx-auto w-full">
     <div id="targetDisplay" class="text-xl font-bold text-center mb-2 hidden editable">
       Target Score: <span id="targetValue"></span>
     </div>
@@ -122,38 +114,7 @@
       </div>
     </div>
 
-    </div>
-<div id="rulesTab" class="hidden p-4"><h2 class="text-xl font-semibold mb-2">Game Rules</h2><pre class="whitespace-pre-wrap text-sm text-gray-800 bg-white p-4 rounded shadow border">Rummy Scoreboard - Game Rules
-
-1. Game Objective:
-   - Players aim to reduce their score to 0.
-   - The game continues round-by-round until all but one player is eliminated or a player wins based on configured rules.
-
-2. Scoring System:
-   - After each round, players submit their scores.
-   - Winnings are automatically calculated and balanced based on round results.
-   - Negative scores indicate losses; positive scores indicate winnings.
-
-3. Game Setup:
-   - Players are added before starting the game.
-   - A target score (e.g., 100 or 500) may be set to limit the maximum total score.
-
-4. Game History:
-   - All completed games are saved and timestamped.
-   - Past games can be viewed from the Game History section.
-
-5. Winnings Summary:
-   - Use the Winnings tab to view total player earnings for any given day.
-   - Select a date to see individual and total winnings for that day.
-
-6. Other Features:
-   - Resume unfinished games from saved state.
-   - Share game state using the "Share Score Board" button.
-   - All calculations are done automatically after each round.
-
-Note: This scoreboard supports local offline usage with data stored in browser cache.</pre></div>
-
-<!-- Footer -->
+    <!-- Footer -->
     <footer class="footer text-center text-sm text-gray-600 mt-4">
       © 2025 MRGollapudi.
     </footer>
@@ -163,31 +124,39 @@ Note: This scoreboard supports local offline usage with data stored in browser c
   <!-- Load html2canvas for screenshot functionality -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="script.js"></script>
+<script>
+let gameBackupState = null;
+let isViewingHistory = false;
+
+function restoreCurrentGame() {
+  if (!gameBackupState) return;
+
+  players = gameBackupState.players;
+  round = gameBackupState.round;
+  gameStarted = gameBackupState.gameStarted;
+  roundScores = gameBackupState.roundScores;
+  TARGET_SCORE = gameBackupState.TARGET_SCORE;
+  REJOIN_THRESHOLD = gameBackupState.REJOIN_THRESHOLD;
+  gameName = gameBackupState.gameName;
+  startDateTime = gameBackupState.startDateTime;
+  isEditing = gameBackupState.isEditing;
+
+  isViewingHistory = false;
+  gameBackupState = null;
+  document.getElementById("currentGameButton").classList.add("hidden");
+
+  updateScoreForm();
+  updateLeaderboard();
+  updatePlayerList();
+  if (typeof updateTargetDisplay === 'function') updateTargetDisplay();
+}
+</script>
+
   <script>
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("sw.js").then(() => console.log("Service Worker Registered"));
     }
   </script>
-
-<script>
-function showTab(tabId) {
-  document.getElementById("boardTab").classList.add("hidden");
-  document.getElementById("rulesTab").classList.add("hidden");
-
-  document.querySelectorAll(".tab-button").forEach(btn => {
-    btn.classList.remove("bg-blue-600", "text-white");
-    btn.classList.add("bg-gray-300", "text-black");
-  });
-
-  document.getElementById(tabId).classList.remove("hidden");
-  const activeBtn = Array.from(document.querySelectorAll(".tab-button")).find(btn => tabId.toLowerCase().includes(btn.textContent.trim().toLowerCase()));
-  if (activeBtn) {
-    activeBtn.classList.add("bg-blue-600", "text-white");
-    activeBtn.classList.remove("bg-gray-300", "text-black");
-  }
-}
-</script>
 </body>
-
 
 </html> 
