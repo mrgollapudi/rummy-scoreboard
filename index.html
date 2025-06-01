@@ -27,7 +27,7 @@
     </div>
   </div>
 
-  <div class="p-4 bg-white rounded-lg shadow max-w-3xl mx-auto w-full">
+  <div style="padding-left: 1.5rem;" class="bg-white rounded-lg shadow-lg p-4 w-full max-w-4xl container">
     <div id="targetDisplay" class="text-xl font-bold text-center mb-2 hidden editable">
       Target Score: <span id="targetValue"></span>
     </div>
@@ -124,34 +124,6 @@
   <!-- Load html2canvas for screenshot functionality -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="script.js"></script>
-<script>
-let gameBackupState = null;
-let isViewingHistory = false;
-
-function restoreCurrentGame() {
-  if (!gameBackupState) return;
-
-  players = gameBackupState.players;
-  round = gameBackupState.round;
-  gameStarted = gameBackupState.gameStarted;
-  roundScores = gameBackupState.roundScores;
-  TARGET_SCORE = gameBackupState.TARGET_SCORE;
-  REJOIN_THRESHOLD = gameBackupState.REJOIN_THRESHOLD;
-  gameName = gameBackupState.gameName;
-  startDateTime = gameBackupState.startDateTime;
-  isEditing = gameBackupState.isEditing;
-
-  isViewingHistory = false;
-  gameBackupState = null;
-  document.getElementById("currentGameButton").classList.add("hidden");
-
-  updateScoreForm();
-  updateLeaderboard();
-  updatePlayerList();
-  if (typeof updateTargetDisplay === 'function') updateTargetDisplay();
-}
-</script>
-
   <script>
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("sw.js").then(() => console.log("Service Worker Registered"));
