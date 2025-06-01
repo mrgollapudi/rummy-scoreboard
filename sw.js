@@ -1,4 +1,4 @@
-const CACHE_NAME = "rummy-scoreboard-v1";
+const CACHE_NAME = "rummy-scoreboard-v2";
 const urlsToCache = [
   "./",
   "./index.html",
