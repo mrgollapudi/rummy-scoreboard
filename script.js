@@ -54,6 +54,7 @@
 
         // Cached DOM elements
         const els = {
+let postButtons = document.getElementById("postEndButtons");
             playerSetup: document.getElementById('playerSetup'),
             scoreInput: document.getElementById('scoreInput'),
             extraPlayerControls: document.getElementById('extraPlayerControls'),
@@ -273,7 +274,6 @@
                     els.shareLeaderboard.classList.add('hidden');
                     updateLeaderboard();
                     updateGameHistory();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.add('hidden');
                 } else {
                     alert('Invalid or expired share link.');
@@ -318,7 +318,6 @@
                 updateLeaderboard();
             }
             updateGameHistory();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.add('hidden');
         }
 
@@ -368,7 +367,6 @@
             filteredHistory.push(gameData);
             localStorage.setItem('rummyGameHistory', JSON.stringify(filteredHistory));
             updateGameHistory();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.add('hidden');
         }
 
@@ -528,7 +526,6 @@
             els.playerError.classList.add('hidden');
             updatePlayerList();
             saveGameState();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.add('hidden');
         }
 
@@ -549,7 +546,6 @@
             updatePlayerList();
             updateLeaderboard();
             saveGameState();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.add('hidden');
         }
 
@@ -586,7 +582,6 @@
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.add('hidden');
             // ✅ Show Add Extra Player input
             els.extraPlayerControls.classList.remove('hidden');
@@ -696,7 +691,6 @@
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.add('hidden');
         }
 
@@ -804,18 +798,15 @@
             if (activePlayersAfter.length <= 1) {
                 updateLeaderboard();
                 updateGameHistory();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.add('hidden');
                 endGame();
             } else {
                 updateScoreForm();
                 updateLeaderboard();
                 updateGameHistory();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.add('hidden');
             }
             saveGameState();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.add('hidden');
         }
 
@@ -840,7 +831,6 @@
                 updateScoreForm();
                 updateLeaderboard();
                 saveGameState();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.add('hidden');
             } else {
                 alert(`${getPlayerDisplayName(player)} cannot rejoin. Rejoin is only allowed in the next round after elimination, and the highest score (${maxScore}) must not exceed ${REJOIN_THRESHOLD}.`);
@@ -995,10 +985,8 @@
             }
 
             saveGameState();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.add('hidden');
             saveGameHistory();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.remove('hidden');
         }
 
@@ -1011,7 +999,6 @@
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.add('hidden');
         }
 
@@ -1061,7 +1048,6 @@
             updateScoreForm();
             updateLeaderboard();
             saveGameState();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.add('hidden');
         }
 
@@ -1069,7 +1055,6 @@
             if (isReadOnly) return;
             if (gameStarted) {
                 saveGameHistory();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.remove('hidden');
                 gameEnded = false;
             }
@@ -1095,7 +1080,6 @@
             updateLeaderboard();
             localStorage.removeItem('rummyGameState');
             updateGameHistory();
-    let postButtons = document.getElementById('postEndButtons');
     if (postButtons) postButtons.classList.add('hidden');
         }
 
