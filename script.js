@@ -47,6 +47,8 @@
         let startDateTime = null;
         let isEditing = false;
         let gameHistory = [];
+let gameBackupState = null;
+let isViewingHistory = false;
         let isReadOnly = false;
         let gameEnded = false;
         const MAX_PLAYERS = 10;
@@ -393,6 +395,21 @@
         }
 
         function viewGameHistory(startDateTime) {
+    if (!gameBackupState) {
+        gameBackupState = {
+            players: JSON.parse(JSON.stringify(players)),
+            round,
+            gameStarted,
+            roundScores: JSON.parse(JSON.stringify(roundScores)),
+            TARGET_SCORE,
+            REJOIN_THRESHOLD,
+            gameName,
+            startDateTime,
+            isEditing,
+        };
+    }
+    isViewingHistory = true;
+    document.getElementById("currentGameButton").classList.remove("hidden");
             if (isReadOnly) return;
             const game = gameHistory.find(g => g.startDateTime === startDateTime);
             if (!game) {
@@ -1073,3 +1090,27 @@
 
         // Load game state on page load
         loadGameState();
+
+
+function restoreCurrentGame() {
+    if (!gameBackupState) return;
+
+    players = gameBackupState.players;
+    round = gameBackupState.round;
+    gameStarted = gameBackupState.gameStarted;
+    roundScores = gameBackupState.roundScores;
+    TARGET_SCORE = gameBackupState.TARGET_SCORE;
+    REJOIN_THRESHOLD = gameBackupState.REJOIN_THRESHOLD;
+    gameName = gameBackupState.gameName;
+    startDateTime = gameBackupState.startDateTime;
+    isEditing = gameBackupState.isEditing;
+
+    isViewingHistory = false;
+    gameBackupState = null;
+    document.getElementById("currentGameButton").classList.add("hidden");
+
+    updateScoreForm();
+    updateLeaderboard();
+    updatePlayerList();
+    updateTargetDisplay();
+}
