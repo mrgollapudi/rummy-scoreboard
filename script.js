@@ -1064,5 +1064,4 @@
         }
 
         // Load game state on page load
-        loadGameState();
-
+        loadGameState(); 
