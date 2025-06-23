@@ -1,3 +1,211 @@
+
+// Global Variables and Utility Functions
+var gk_isXlsx = false;
+var gk_xlsxFileLookup = {};
+var gk_fileData = {};
+
+// Utility function to check if a cell is not empty or null
+function filledCell(cell) {
+  return cell !== '' && cell != null;
+}
+
+// Handles loading and parsing Excel or plain data files
+function loadFileData(filename) {
+  // If the file is an Excel file, read and convert it to CSV
+  if (gk_isXlsx) {
+    // Code to handle Excel file conversion
+  } else {
+    // Code to handle plain data file
+  }
+  // Filters out empty rows and identifies the header row
+  // Returns the CSV string or raw file data
+}
+
+// Game State Variables
+let players = [];
+let round = 1;
+let gameStarted = false;
+let roundScores = [];
+let TARGET_SCORE = null;
+let REJOIN_THRESHOLD = null;
+let gameName = '';
+let startDateTime = null;
+let isEditing = false;
+let gameHistory = [];
+let isReadOnly = false;
+let gameEnded = false;
+const MAX_PLAYERS = 10;
+const MAX_SHARED_GAMES = 100;
+
+// DOM Element References
+const els = {
+  playerSetup: document.getElementById('playerSetup'),
+  scoreInput: document.getElementById('scoreInput'),
+  // Other element references
+};
+
+// Helper Functions
+
+// Format player names and display them with rejoin count if applicable
+function formatName(name) {
+  // Code to format name
+}
+
+function getPlayerDisplayName(player) {
+  // Code to get player display name
+}
+
+// Calculate total bets and determine winnings based on game rules
+function calculateTotalBetAmount() {
+  // Code to calculate total bet amount
+}
+
+function calculateWinnings() {
+  // Code to calculate winnings
+}
+
+// Local Storage and Sharing
+
+// Generate a random ID for saving shared game data
+function generateRandomId() {
+  // Code to generate random ID
+}
+
+// Save shared game data using localStorage
+function saveSharedGame(gameData) {
+  // Code to save shared game data
+}
+
+// Generate a shareable link for the current game state
+function generateShareLink() {
+  // Code to generate share link
+}
+
+// Generate a shareable link for game history
+function generateHistoryShareLink(startDateTime) {
+  // Code to generate history share link
+}
+
+// Game State Management
+
+// Save the current game state to local storage
+function saveGameState() {
+  // Code to save game state
+}
+
+// Load the game state from local storage or shared link
+function loadGameState() {
+  // Code to load game state
+}
+
+// Load local game state from local storage
+function loadLocalGameState() {
+  // Code to load local game state
+}
+
+// Game History
+
+// Save the game history to local storage
+function saveGameHistory() {
+  // Code to save game history
+}
+
+// Update the game history with the latest round data
+function updateGameHistory() {
+  // Code to update game history
+}
+
+// View the game history for a specific start date
+function viewGameHistory(startDateTime) {
+  // Code to view game history
+}
+
+// Player Management
+
+// Add a new player to the game
+function addPlayer() {
+  // Code to add player
+}
+
+// Update the player list in the UI
+function updatePlayerList() {
+  // Code to update player list
+}
+
+// Remove a player from the game
+function removePlayer(name) {
+  // Code to remove player
+}
+
+// Game Flow Control
+
+// Start the game and initialize the first round
+function startGame() {
+  // Code to start game
+}
+
+// Update the score input form for the current round
+function updateScoreForm() {
+  // Code to update score form
+}
+
+// Edit the scores for the last round
+function editLastRound() {
+  // Code to edit last round
+}
+
+// Submit the scores for the current round
+function submitScores() {
+  // Code to submit scores
+}
+
+// Rejoining and Leaderboard
+
+// Allow an eliminated player to rejoin the game
+function rejoinPlayer(name) {
+  // Code to rejoin player
+}
+
+// Update the leaderboard with the latest scores and player status
+function updateLeaderboard() {
+  // Code to update leaderboard
+}
+
+// Ending and Resetting the Game
+
+// End the game and display the final results
+function endGame(isManualEnd = false) {
+  // Code to end game
+}
+
+// Resume a paused game
+function resumeGame() {
+  // Code to resume game
+}
+
+// Add an extra player to the game mid-round
+function addExtraPlayer() {
+  // Code to add extra player
+}
+
+// Reset the game to its initial state
+function resetGame() {
+  // Code to reset game
+}
+
+// Winnings Summary
+
+// Toggle the display of the winnings summary
+function toggleWinningsSummary() {
+  // Code to toggle winnings summary
+}
+
+// Render the winnings summary for a selected date
+function renderWinningsSummary() {
+  // Code to render winnings summary
+}
+
+// Original script content
 var gk_isXlsx = false;
 var gk_xlsxFileLookup = {};
 var gk_fileData = {};
