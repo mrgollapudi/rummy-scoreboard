@@ -1,4 +1,3 @@
-
 // Global Variables and Utility Functions
 var gk_isXlsx = false;
 var gk_xlsxFileLookup = {};
@@ -6,216 +5,13 @@ var gk_fileData = {};
 
 // Utility function to check if a cell is not empty or null
 function filledCell(cell) {
-  return cell !== '' && cell != null;
+    return cell !== '' && cell != null;
 }
 
 // Handles loading and parsing Excel or plain data files
 function loadFileData(filename) {
-  // If the file is an Excel file, read and convert it to CSV
-  if (gk_isXlsx) {
-    // Code to handle Excel file conversion
-  } else {
-    // Code to handle plain data file
-  }
-  // Filters out empty rows and identifies the header row
-  // Returns the CSV string or raw file data
-}
-
-// Game State Variables
-let players = [];
-let round = 1;
-let gameStarted = false;
-let roundScores = [];
-let TARGET_SCORE = null;
-let REJOIN_THRESHOLD = null;
-let gameName = '';
-let startDateTime = null;
-let isEditing = false;
-let gameHistory = [];
-let isReadOnly = false;
-let gameEnded = false;
-const MAX_PLAYERS = 10;
-const MAX_SHARED_GAMES = 100;
-
-// DOM Element References
-const els = {
-  playerSetup: document.getElementById('playerSetup'),
-  scoreInput: document.getElementById('scoreInput'),
-  // Other element references
-};
-
-// Helper Functions
-
-// Format player names and display them with rejoin count if applicable
-function formatName(name) {
-  // Code to format name
-}
-
-function getPlayerDisplayName(player) {
-  // Code to get player display name
-}
-
-// Calculate total bets and determine winnings based on game rules
-function calculateTotalBetAmount() {
-  // Code to calculate total bet amount
-}
-
-function calculateWinnings() {
-  // Code to calculate winnings
-}
-
-// Local Storage and Sharing
-
-// Generate a random ID for saving shared game data
-function generateRandomId() {
-  // Code to generate random ID
-}
-
-// Save shared game data using localStorage
-function saveSharedGame(gameData) {
-  // Code to save shared game data
-}
-
-// Generate a shareable link for the current game state
-function generateShareLink() {
-  // Code to generate share link
-}
-
-// Generate a shareable link for game history
-function generateHistoryShareLink(startDateTime) {
-  // Code to generate history share link
-}
-
-// Game State Management
-
-// Save the current game state to local storage
-function saveGameState() {
-  // Code to save game state
-}
-
-// Load the game state from local storage or shared link
-function loadGameState() {
-  // Code to load game state
-}
-
-// Load local game state from local storage
-function loadLocalGameState() {
-  // Code to load local game state
-}
-
-// Game History
-
-// Save the game history to local storage
-function saveGameHistory() {
-  // Code to save game history
-}
-
-// Update the game history with the latest round data
-function updateGameHistory() {
-  // Code to update game history
-}
-
-// View the game history for a specific start date
-function viewGameHistory(startDateTime) {
-  // Code to view game history
-}
-
-// Player Management
-
-// Add a new player to the game
-function addPlayer() {
-  // Code to add player
-}
-
-// Update the player list in the UI
-function updatePlayerList() {
-  // Code to update player list
-}
-
-// Remove a player from the game
-function removePlayer(name) {
-  // Code to remove player
-}
-
-// Game Flow Control
-
-// Start the game and initialize the first round
-function startGame() {
-  // Code to start game
-}
-
-// Update the score input form for the current round
-function updateScoreForm() {
-  // Code to update score form
-}
-
-// Edit the scores for the last round
-function editLastRound() {
-  // Code to edit last round
-}
-
-// Submit the scores for the current round
-function submitScores() {
-  // Code to submit scores
-}
-
-// Rejoining and Leaderboard
-
-// Allow an eliminated player to rejoin the game
-function rejoinPlayer(name) {
-  // Code to rejoin player
-}
-
-// Update the leaderboard with the latest scores and player status
-function updateLeaderboard() {
-  // Code to update leaderboard
-}
-
-// Ending and Resetting the Game
-
-// End the game and display the final results
-function endGame(isManualEnd = false) {
-  // Code to end game
-}
-
-// Resume a paused game
-function resumeGame() {
-  // Code to resume game
-}
-
-// Add an extra player to the game mid-round
-function addExtraPlayer() {
-  // Code to add extra player
-}
-
-// Reset the game to its initial state
-function resetGame() {
-  // Code to reset game
-}
-
-// Winnings Summary
-
-// Toggle the display of the winnings summary
-function toggleWinningsSummary() {
-  // Code to toggle winnings summary
-}
-
-// Render the winnings summary for a selected date
-function renderWinningsSummary() {
-  // Code to render winnings summary
-}
-
-// Original script content
-var gk_isXlsx = false;
-var gk_xlsxFileLookup = {};
-var gk_fileData = {};
-
-function filledCell(cell) {
-    return cell !== '' && cell != null;
-}
-
-function loadFileData(filename) {
-    if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+	// If the file is an Excel file, read and convert it to CSV
+    if (gk_isXlsx && gk_xlsxFileLookup[filename]) { // Code to handle Excel file conversion
         try {
             var workbook = XLSX.read(gk_fileData[filename], {
                 type: 'base64'
@@ -245,25 +41,26 @@ function loadFileData(filename) {
     return gk_fileData[filename] || "";
 }
 
-let players = [];
-let round = 1;
-let gameStarted = false;
-let roundScores = [];
-let TARGET_SCORE = null;
-let REJOIN_THRESHOLD = null;
-let gameName = '';
-let startDateTime = null;
-let isEditing = false;
-let gameHistory = [];
-let isReadOnly = false;
-let gameEnded = false;
-const MAX_PLAYERS = 10;
-const MAX_SHARED_GAMES = 100;
+// Game State Variables
+let players = []; // Array to store player information
+let round = 1; // Current round number
+let gameStarted = false; // Flag to check if the game has started
+let roundScores = []; // Array to store scores for each round
+let TARGET_SCORE = null; // Target score to end the game
+let REJOIN_THRESHOLD = null; // Threshold score for rejoining the game
+let gameName = ''; // Name of the game
+let startDateTime = null; // Start date and time of the game
+let isEditing = false; // Flag to check if the game is in editing mode
+let gameHistory = []; // Array to store game history
+let isReadOnly = false; // Flag to check if the game is in read-only mode
+let gameEnded = false; // Flag to check if the game has ended
+const MAX_PLAYERS = 10; // Maximum number of players allowed
+const MAX_SHARED_GAMES = 100; // Maximum number of shared games allowed
 
-// Cached DOM elements
+// DOM Element References
 const els = {
-    playerSetup: document.getElementById('playerSetup'),
-    scoreInput: document.getElementById('scoreInput'),
+    playerSetup: document.getElementById('playerSetup'), // Reference to player setup element
+    scoreInput: document.getElementById('scoreInput'), // Reference to score input element
     extraPlayerControls: document.getElementById('extraPlayerControls'),
     gameOver: document.getElementById('gameOver'),
     targetScore: document.getElementById('targetScore'),
@@ -289,19 +86,25 @@ const els = {
     gameOverButtons: document.getElementById('gameOverButtons')
 };
 
+// Helper Functions
+
+// Format player names and display them with rejoin count if applicable
 function formatName(name) {
     return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 }
 
+// Function to get player display name
 function getPlayerDisplayName(player) {
     const formattedName = formatName(player.name);
     return player.rejoinCount > 0 ? `${formattedName} (R${player.rejoinCount})` : formattedName;
 }
 
+// Function to calculate total bet amount
 function calculateTotalBetAmount() {
     return players.reduce((sum, player) => sum + player.betAmount, 0);
 }
 
+// Function to calculate winnings based on game rules
 function calculateWinnings() {
     const activePlayers = players.filter(p => !p.eliminated);
     const totalBetAmount = parseFloat(calculateTotalBetAmount());
@@ -361,6 +164,9 @@ function calculateWinnings() {
     return winnings;
 }
 
+// Local Storage and Sharing
+
+// Generate a random ID for saving shared game data
 function generateRandomId() {
     const sharedGames = JSON.parse(localStorage.getItem('rummySharedGames') || '{}');
     let id;
@@ -370,6 +176,7 @@ function generateRandomId() {
     return id;
 }
 
+// Save shared game data using localStorage
 function saveSharedGame(gameData) {
     let sharedGames = JSON.parse(localStorage.getItem('rummySharedGames') || '{}');
     const id = generateRandomId();
@@ -392,6 +199,7 @@ function saveSharedGame(gameData) {
     return id;
 }
 
+// Generate a shareable link for the current game state
 function generateShareLink() {
     const leaderboardElement = document.getElementById('leaderboard');
     if (!leaderboardElement) {
@@ -411,6 +219,7 @@ function generateShareLink() {
     });
 }
 
+// Generate a shareable link for game history
 function generateHistoryShareLink(startDateTime) {
     const game = gameHistory.find(g => g.startDateTime === startDateTime);
     if (!game) {
@@ -442,6 +251,9 @@ function makeUniqueGameName(name) {
     return uniqueName;
 }
 
+// Game State Management
+
+// Save the current game state to local storage
 function saveGameState() {
     if (!isReadOnly) {
         localStorage.setItem('rummyGameState', JSON.stringify({
@@ -458,6 +270,7 @@ function saveGameState() {
     }
 }
 
+// Load the game state from local storage or shared link
 function loadGameState() {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
@@ -489,6 +302,7 @@ function loadGameState() {
     }
 }
 
+// Load local game state from local storage
 function loadLocalGameState() {
     const state = JSON.parse(localStorage.getItem('rummyGameState') || '{}');
     if (state.players) {
@@ -525,6 +339,9 @@ function loadLocalGameState() {
     updateGameHistory();
 }
 
+// Game History
+
+// Save the game history to local storage
 function saveGameHistory() {
     if (isReadOnly) return;
 
@@ -573,7 +390,7 @@ function saveGameHistory() {
     updateGameHistory();
 }
 
-
+// Update the game history with the latest round data
 function updateGameHistory() {
     gameHistory = JSON.parse(localStorage.getItem('rummyGameHistory') || '[]');
     els.historyTable.innerHTML = gameHistory.length === 0 ?
@@ -592,6 +409,7 @@ function updateGameHistory() {
                 `).join('');
 }
 
+// View the game history for a specific start date
 function viewGameHistory(startDateTime) {
     if (isReadOnly) return;
     const game = gameHistory.find(g => g.startDateTime === startDateTime);
@@ -662,6 +480,9 @@ function viewGameHistory(startDateTime) {
     els.leaderboardTable.innerHTML = tableHTML;
 }
 
+// Player Management
+
+// Add a new player to the game
 function addPlayer() {
     if (isReadOnly) return;
 
@@ -730,7 +551,7 @@ function addPlayer() {
     saveGameState();
 }
 
-
+// Update the player list in the UI
 function updatePlayerList() {
     if (isReadOnly) return;
     els.playerList.innerHTML = players.map(player => `
@@ -741,6 +562,7 @@ function updatePlayerList() {
             `).join('');
 }
 
+// Remove a player from the game
 function removePlayer(name) {
     if (isReadOnly) return;
     players = players.filter(p => p.name !== name);
@@ -749,6 +571,9 @@ function removePlayer(name) {
     saveGameState();
 }
 
+// Game Flow Control
+
+// Start the game and initialize the first round
 function startGame() {
     if (isReadOnly) return;
     const target = parseInt(els.targetScore.value) || 0;
@@ -787,6 +612,7 @@ function startGame() {
 
 }
 
+// Update the score input form for the current round
 function updateScoreForm() {
     if (isReadOnly) return;
 
@@ -858,7 +684,7 @@ function updateScoreForm() {
     els.errorMessage.classList.add('hidden');
 }
 
-
+// Edit the scores for the last round
 function editLastRound() {
     if (isReadOnly || roundScores.length === 0 || !els.gameOver.classList.contains('hidden')) return;
 
@@ -892,7 +718,7 @@ function editLastRound() {
     saveGameState();
 }
 
-
+// Submit the scores for the current round
 function submitScores() {
     if (isReadOnly) return;
     const scores = [];
@@ -1005,6 +831,9 @@ function submitScores() {
     saveGameState();
 }
 
+// Rejoining and Leaderboard
+
+// Allow an eliminated player to rejoin the game
 function rejoinPlayer(name) {
     if (isReadOnly) return;
     const player = players.find(p => p.name === name);
@@ -1031,6 +860,7 @@ function rejoinPlayer(name) {
     }
 }
 
+// Update the leaderboard with the latest scores and player status
 function updateLeaderboard() {
     els.leaderboardGameName.textContent = gameName || 'Untitled';
     els.totalBetAmount.textContent = calculateTotalBetAmount();
@@ -1121,6 +951,9 @@ function updateLeaderboard() {
 
 }
 
+// Ending and Resetting the Game
+
+// End the game and display the final results
 function endGame(isManualEnd = false) {
     if (isReadOnly || !gameStarted) return;
     // 🔻 Hide Add Extra Player controls when game ends
@@ -1182,6 +1015,7 @@ function endGame(isManualEnd = false) {
     saveGameHistory();
 }
 
+// Resume a paused game
 function resumeGame() {
     if (isReadOnly || !gameStarted) return;
     els.scoreInput.classList.remove('hidden');
@@ -1193,6 +1027,7 @@ function resumeGame() {
     saveGameState();
 }
 
+// Add an extra player to the game mid-round
 function addExtraPlayer() {
     if (!gameStarted || isReadOnly) return;
 
@@ -1241,6 +1076,7 @@ function addExtraPlayer() {
     saveGameState();
 }
 
+// Reset the game to its initial state
 function resetGame() {
     if (isReadOnly) return;
     if (gameStarted) {
@@ -1274,6 +1110,9 @@ function resetGame() {
 // Load game state on page load
 loadGameState();
 
+// Winnings Summary
+
+// Toggle the display of the winnings summary
 function toggleWinningsSummary() {
     const container = document.getElementById('winningsSummaryContainer');
     if (container.classList.contains('hidden')) {
@@ -1284,6 +1123,7 @@ function toggleWinningsSummary() {
     }
 }
 
+// Render the winnings summary for a selected date
 function renderWinningsSummary() {
     const container = document.getElementById('winningsSummaryContainer');
     if (container.classList.contains('hidden')) return;
