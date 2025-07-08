@@ -10,7 +10,7 @@ function filledCell(cell) {
 
 // Handles loading and parsing Excel or plain data files
 function loadFileData(filename) {
-	// If the file is an Excel file, read and convert it to CSV
+    // If the file is an Excel file, read and convert it to CSV
     if (gk_isXlsx && gk_xlsxFileLookup[filename]) { // Code to handle Excel file conversion
         try {
             var workbook = XLSX.read(gk_fileData[filename], {
@@ -46,7 +46,9 @@ let players = []; // Array to store player information
 let round = 1; // Current round number
 let gameStarted = false; // Flag to check if the game has started
 let roundScores = []; // Array to store scores for each round
-let TARGET_SCORE = null; // Target score to end the game
+let TARGET_SCORE = null;
+let DROP_VALUE = 24;
+let MD_VALUE = 48; // Target score to end the game
 let REJOIN_THRESHOLD = null; // Threshold score for rejoining the game
 let gameName = ''; // Name of the game
 let startDateTime = null; // Start date and time of the game
@@ -121,7 +123,7 @@ function calculateWinnings() {
 
     // Check if any active players have drops
     const hasDrops = activePlayers.some(player =>
-        Math.floor((TARGET_SCORE - player.totalScore) / 24) > 0
+        Math.floor((TARGET_SCORE - player.totalScore) / DROP_VALUE) > 0
     );
 
     if (!hasDrops && activePlayers.length > 0) {
@@ -140,7 +142,7 @@ function calculateWinnings() {
 
         const playerDrops = activePlayers.map(player => ({
             name: getPlayerDisplayName(player),
-            drops: Math.max(0, Math.round(Math.floor((TARGET_SCORE - player.totalScore) / 24)))
+            drops: Math.max(0, Math.round(Math.floor((TARGET_SCORE - player.totalScore) / DROP_VALUE)))
         }));
         const totalNonZeroDrops = playerDrops.reduce((sum, p) => sum + p.drops, 0);
 
@@ -576,6 +578,12 @@ function removePlayer(name) {
 // Start the game and initialize the first round
 function startGame() {
     if (isReadOnly) return;
+    const dropInput = parseInt(document.getElementById('dropValue')?.value) || 24;
+    const mdInput = parseInt(document.getElementById('mdValue')?.value) || 48;
+    DROP_VALUE = dropInput;
+    MD_VALUE = mdInput;
+
+    if (isReadOnly) return;
     const target = parseInt(els.targetScore.value) || 0;
     if (target < 100) {
         els.targetError.textContent = 'Target score must be at least 100.';
@@ -588,7 +596,7 @@ function startGame() {
         return;
     }
     TARGET_SCORE = target;
-    REJOIN_THRESHOLD = TARGET_SCORE - 25;
+    REJOIN_THRESHOLD = TARGET_SCORE - DROP_VALUE - 1;
     els.targetError.classList.add('hidden');
     els.targetScore.disabled = true;
     els.targetValue.textContent = TARGET_SCORE;
@@ -631,7 +639,7 @@ function updateScoreForm() {
         let selectedValue = isEditing && roundScores.length > 0 ?
             roundScores[roundScores.length - 1][player.name] :
             24;
-        let isEntry = isEditing && ![0, 24, 48, 80].includes(selectedValue);
+        let isEntry = isEditing && ![0, DROP_VALUE, MD_VALUE, 80].includes(selectedValue);
         if (isEntry && selectedValue === undefined) selectedValue = '';
         return `
                   <div class="flex flex-col gap-1 w-10">
@@ -640,8 +648,8 @@ function updateScoreForm() {
                     </label>
                     <select id="score_${player.name}" class="border rounded p-1 text-sm">
                       <option value="0" ${selectedValue === 0 ? 'selected' : ''}>R (0)</option>
-                      <option value="24" ${selectedValue === 24 ? 'selected' : ''}>D (24)</option>
-                      <option value="48" ${selectedValue === 48 ? 'selected' : ''}>MD (48)</option>
+                      <option " + DROP_VALUE + " ${selectedValue === 24 ? 'selected' : ''}>D (24)</option>
+                      <option " + MD_VALUE + " ${selectedValue === 48 ? 'selected' : ''}>MD (48)</option>
                       <option value="80" ${selectedValue === 80 ? 'selected' : ''}>FC (80)</option>
                       <option value="entry" ${isEntry ? 'selected' : ''}>Input:</option>
                     </select>
@@ -844,9 +852,9 @@ function rejoinPlayer(name) {
 
     if (maxScore <= REJOIN_THRESHOLD && player.lastEliminatedRound !== null && round === player.lastEliminatedRound + 1) {
         player.eliminated = false;
-        player.rejoinCount += 1; 
+        player.rejoinCount += 1;
         player.betAmount += player.initialBetAmount;
-        player.totalScore = maxScore+1;
+        player.totalScore = maxScore + 1;
         player.lastEliminatedRound = null;
         player.rejoinRounds.push(round);
         roundScores.forEach(round => {
@@ -909,7 +917,7 @@ function updateLeaderboard() {
 
     // Drops row
     tableHTML += `<tr class="bg-white-leaderboard"><td class="p-1 font-bold">Drops:</td>${players.map(player => {
-        const drops = player.eliminated ? '-' : Math.round(Math.floor((TARGET_SCORE - player.totalScore) / 24));
+        const drops = player.eliminated ? '-' : Math.round(Math.floor((TARGET_SCORE - player.totalScore) / DROP_VALUE));
         const dropsCellClass = player.eliminated ? 'text-center eliminated-score' : 'text-center';
         return `<td class="p-1 ${dropsCellClass}">${drops}</td>`;
     }).join('')}</tr>`;
@@ -970,7 +978,7 @@ function endGame(isManualEnd = false) {
             .filter(player => !player.eliminated)
             .map(player => ({
                 name: getPlayerDisplayName(player),
-                drops: Math.round(Math.floor((TARGET_SCORE - player.totalScore) / 24))
+                drops: Math.round(Math.floor((TARGET_SCORE - player.totalScore) / DROP_VALUE))
             }))
             .sort((a, b) => a.name.localeCompare(b.name));
         els.winnerText.textContent = dropsLeft.length > 0 ?
