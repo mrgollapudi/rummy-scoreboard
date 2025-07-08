@@ -844,7 +844,7 @@ function rejoinPlayer(name) {
 
     if (maxScore <= REJOIN_THRESHOLD && player.lastEliminatedRound !== null && round === player.lastEliminatedRound + 1) {
         player.eliminated = false;
-        player.rejoinCount += 1;
+        player.rejoinCount += 1; console.log(REJOIN_THRESHOLD);
         player.betAmount += player.initialBetAmount;
         player.totalScore = maxScore+1;
         player.lastEliminatedRound = null;
