@@ -647,12 +647,12 @@ function updateScoreForm() {
                       ${getPlayerDisplayName(player)}
                     </label>
                     <select id="score_${player.name}" class="border rounded p-1 text-sm">
-                      <option value="0" ${selectedValue === 0 ? 'selected' : ''}>R (0)</option>
-                      <option " + DROP_VALUE + " ${selectedValue === 24 ? 'selected' : ''}>D (24)</option>
-                      <option " + MD_VALUE + " ${selectedValue === 48 ? 'selected' : ''}>MD (48)</option>
-                      <option value="80" ${selectedValue === 80 ? 'selected' : ''}>FC (80)</option>
-                      <option value="entry" ${isEntry ? 'selected' : ''}>Input:</option>
-                    </select>
+  			<option value="0" ${selectedValue === 0 ? 'selected' : ''}>R (0)</option>
+  			<option value="${DROP_VALUE}" ${selectedValue === DROP_VALUE ? 'selected' : ''}>D (${DROP_VALUE})</option>
+  			<option value="${MD_VALUE}" ${selectedValue === MD_VALUE ? 'selected' : ''}>MD (${MD_VALUE})</option>
+  			<option value="80" ${selectedValue === 80 ? 'selected' : ''}>FC (80)</option>
+  			<option value="entry" ${isEntry ? 'selected' : ''}>Input:</option>
+			</select>
                     <label for="entry_${player.name}" class="sr-only">Custom Score for ${getPlayerDisplayName(player)}</label>
                     <input id="entry_${player.name}" type="number" placeholder="2-80" value="${isEntry ? selectedValue : ''}"
                       class="border rounded p-1 text-sm w-10 ${isEntry ? '' : 'hidden'}"
