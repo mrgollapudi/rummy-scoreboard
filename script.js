@@ -48,7 +48,8 @@ let gameStarted = false; // Flag to check if the game has started
 let roundScores = []; // Array to store scores for each round
 let TARGET_SCORE = null;
 let DROP_VALUE = 24;
-let MD_VALUE = 48; // Target score to end the game
+let MD_VALUE = 48;
+let FC_VALUE = 80; // Target score to end the game
 let REJOIN_THRESHOLD = null; // Threshold score for rejoining the game
 let gameName = ''; // Name of the game
 let startDateTime = null; // Start date and time of the game
@@ -582,6 +583,7 @@ function startGame() {
     const mdInput = parseInt(document.getElementById('mdValue')?.value) || 48;
     DROP_VALUE = dropInput;
     MD_VALUE = mdInput;
+    FC_VALUE = parseInt(document.getElementById('fcValue')?.value) || 80;
 
     if (isReadOnly) return;
     const target = parseInt(els.targetScore.value) || 0;
@@ -638,8 +640,8 @@ function updateScoreForm() {
     els.scoreForm.innerHTML = playersToShow.map(player => {
         let selectedValue = isEditing && roundScores.length > 0 ?
             roundScores[roundScores.length - 1][player.name] :
-            24;
-        let isEntry = isEditing && ![0, DROP_VALUE, MD_VALUE, 80].includes(selectedValue);
+            DROP_VALUE;
+        let isEntry = isEditing && ![0, DROP_VALUE, MD_VALUE, FC_VALUE].includes(selectedValue);
         if (isEntry && selectedValue === undefined) selectedValue = '';
         return `
                   <div class="flex flex-col gap-1 w-10">
@@ -650,7 +652,7 @@ function updateScoreForm() {
   			<option value="0" ${selectedValue === 0 ? 'selected' : ''}>R (0)</option>
   			<option value="${DROP_VALUE}" ${selectedValue === DROP_VALUE ? 'selected' : ''}>D (${DROP_VALUE})</option>
   			<option value="${MD_VALUE}" ${selectedValue === MD_VALUE ? 'selected' : ''}>MD (${MD_VALUE})</option>
-  			<option value="80" ${selectedValue === 80 ? 'selected' : ''}>FC (80)</option>
+  			<option value="${FC_VALUE}" ${selectedValue === FC_VALUE ? 'selected' : ''}>FC (${FC_VALUE})</option>
   			<option value="entry" ${isEntry ? 'selected' : ''}>Input:</option>
 			</select>
                     <label for="entry_${player.name}" class="sr-only">Custom Score for ${getPlayerDisplayName(player)}</label>
