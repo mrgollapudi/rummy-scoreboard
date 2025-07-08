@@ -631,7 +631,7 @@ function updateScoreForm() {
         let selectedValue = isEditing && roundScores.length > 0 ?
             roundScores[roundScores.length - 1][player.name] :
             24;
-        let isEntry = isEditing && ![0, 24, 40, 80].includes(selectedValue);
+        let isEntry = isEditing && ![0, 24, 48, 80].includes(selectedValue);
         if (isEntry && selectedValue === undefined) selectedValue = '';
         return `
                   <div class="flex flex-col gap-1 w-10">
@@ -641,7 +641,7 @@ function updateScoreForm() {
                     <select id="score_${player.name}" class="border rounded p-1 text-sm">
                       <option value="0" ${selectedValue === 0 ? 'selected' : ''}>R (0)</option>
                       <option value="24" ${selectedValue === 24 ? 'selected' : ''}>D (24)</option>
-                      <option value="40" ${selectedValue === 40 ? 'selected' : ''}>MD (40)</option>
+                      <option value="48" ${selectedValue === 48 ? 'selected' : ''}>MD (48)</option>
                       <option value="80" ${selectedValue === 80 ? 'selected' : ''}>FC (80)</option>
                       <option value="entry" ${isEntry ? 'selected' : ''}>Input:</option>
                     </select>
