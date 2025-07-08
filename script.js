@@ -10,7 +10,7 @@ function filledCell(cell) {
 
 // Handles loading and parsing Excel or plain data files
 function loadFileData(filename) {
-    // If the file is an Excel file, read and convert it to CSV
+	// If the file is an Excel file, read and convert it to CSV
     if (gk_isXlsx && gk_xlsxFileLookup[filename]) { // Code to handle Excel file conversion
         try {
             var workbook = XLSX.read(gk_fileData[filename], {
@@ -360,7 +360,7 @@ function saveGameHistory() {
 
     if (els.winnerText.textContent.includes('manually')) {
         result = `Manual End: ${result}`;
-    } else if (!activePlayers.some(p => Math.floor((TARGET_SCORE - p.totalScore) / 24) > 0)) {
+    } else if (!activePlayers.some(p => Math.floor((TARGET_SCORE - p.totalScore) / DROP_VALUE) > 0)) {
         result = `No Drops: ${result}`;
     }
 
@@ -456,9 +456,9 @@ function viewGameHistory(startDateTime) {
         const isHighest = !player.eliminated && player.totalScore === maxTotal;
         const totalCellClass = [
             'text-center',
-            pointsToTarget === 24 ? 'bg-amber-500 text-white' : '',
-            pointsToTarget < 24 && player.totalScore <= game.targetScore ? 'bg-red-500 text-white' : '',
-            player.eliminated && pointsToTarget !== 24 && !(pointsToTarget < 24 && player.totalScore <= game.targetScore) ? 'eliminated-score' : '',
+            pointsToTarget === DROP_VALUE ? 'bg-amber-500 text-white' : '',
+            pointsToTarget < DROP_VALUE && player.totalScore <= game.targetScore ? 'bg-red-500 text-white' : '',
+            player.eliminated && pointsToTarget !== DROP_VALUE && !(pointsToTarget < DROP_VALUE && player.totalScore <= game.targetScore) ? 'eliminated-score' : '',
             isLowest ? 'lowest-total' : '',
             isHighest ? 'highest-total' : ''
         ].filter(Boolean).join(' ');
@@ -852,9 +852,9 @@ function rejoinPlayer(name) {
 
     if (maxScore <= REJOIN_THRESHOLD && player.lastEliminatedRound !== null && round === player.lastEliminatedRound + 1) {
         player.eliminated = false;
-        player.rejoinCount += 1;
+        player.rejoinCount += 1; 
         player.betAmount += player.initialBetAmount;
-        player.totalScore = maxScore + 1;
+        player.totalScore = maxScore+1;
         player.lastEliminatedRound = null;
         player.rejoinRounds.push(round);
         roundScores.forEach(round => {
