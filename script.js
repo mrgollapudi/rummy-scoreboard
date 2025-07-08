@@ -937,10 +937,12 @@ function updateLeaderboard() {
             const activePlayersCount = players.filter(p => !p.eliminated).length;
             const scores = players.filter(p => !p.eliminated).map(p => p.totalScore);
             const maxScore = scores.length > 0 ? Math.max(...scores) : 0;
+            const winnerExists = players.filter(p => !p.eliminated).length === 1;
             const canRejoin = player.eliminated &&
                 player.lastEliminatedRound !== null &&
                 round === player.lastEliminatedRound + 1 &&
                 maxScore <= REJOIN_THRESHOLD;
+            if (winnerExists) canRejoin = false;
 
             return `<td class="p-1 text-center">${canRejoin ? `<button onclick="rejoinPlayer('${player.name}')" class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600">Rejoin</button>` : ''}</td>`;
         }).join('')}</tr>`;
