@@ -938,7 +938,8 @@ function updateLeaderboard() {
             const scores = players.filter(p => !p.eliminated).map(p => p.totalScore);
             const maxScore = scores.length > 0 ? Math.max(...scores) : 0;
             const winnerExists = players.filter(p => !p.eliminated).length === 1;
-            const canRejoin = player.eliminated &&
+            const winnerExists = players.filter(p => !p.eliminated).length === 1;
+            let canRejoin = player.eliminated &&
                 player.lastEliminatedRound !== null &&
                 round === player.lastEliminatedRound + 1 &&
                 maxScore <= REJOIN_THRESHOLD;
