@@ -588,7 +588,7 @@ function startGame() {
         return;
     }
     TARGET_SCORE = target;
-    REJOIN_THRESHOLD = target - 25;
+    REJOIN_THRESHOLD = TARGET_SCORE - 25;
     els.targetError.classList.add('hidden');
     els.targetScore.disabled = true;
     els.targetValue.textContent = TARGET_SCORE;
@@ -844,7 +844,7 @@ function rejoinPlayer(name) {
 
     if (maxScore <= REJOIN_THRESHOLD && player.lastEliminatedRound !== null && round === player.lastEliminatedRound + 1) {
         player.eliminated = false;
-        player.rejoinCount += 1; console.log(REJOIN_THRESHOLD);
+        player.rejoinCount += 1; 
         player.betAmount += player.initialBetAmount;
         player.totalScore = maxScore+1;
         player.lastEliminatedRound = null;
